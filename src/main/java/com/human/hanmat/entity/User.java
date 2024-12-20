@@ -15,7 +15,7 @@ import java.sql.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "user", schema = "hanmat")
+@Table(name = "t_user", schema = "hanmat")
 public class User {
     @Id
     @Column(name = "user_id")
@@ -50,8 +50,8 @@ public class User {
     private String delBy;
 
     @Column(name = "user_is_deleted")
-    private boolean isDeleted;
+    private String isDeleted;
 
     @Column(name = "user_is_admin")
-    private boolean isAdmin;
+    private String isAdmin;
 }

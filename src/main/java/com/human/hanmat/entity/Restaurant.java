@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "restaurant", schema = "hanmat")
+@Table(name = "t_restaurant", schema = "hanmat")
 public class Restaurant {
     @Id
     @Column(name = "restaurant_id")
@@ -34,17 +36,17 @@ public class Restaurant {
     private double y;
 
     @Column(name = "restaurant_reg_date")
-    private String regDate;
+    private Date regDate;
 
     @Column(name = "restaurant_reg_by")
     private String regBy;
 
     @Column(name = "restaurant_last_mod_date")
-    private String lastModDate;
+    private Date lastModDate;
 
     @Column(name = "restaurant_last_mod_by")
     private String lastModBy;
 
     @Column(name = "restaurant_is_closed")
-    private boolean isClosed;
+    private String isClosed;
 }

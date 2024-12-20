@@ -14,7 +14,7 @@ import java.sql.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "comment", schema = "hanmat")
+@Table(name = "T_COMMENT", schema = "HANMAT")
 public class Comment {
     @Id
     @Column(name = "comment_id")
@@ -39,11 +39,11 @@ public class Comment {
     private String delBy;
 
     @Column(name = "comment_is_hidden")
-    private boolean isHidden;
+    private String isHidden;
 
     @Column(name = "comment_is_reported")
-    private boolean isReported;
+    private String isReported;
 
     @Column(name = "comment_is_deleted")
-    private boolean isDeleted;
+    private String isDeleted;
 }

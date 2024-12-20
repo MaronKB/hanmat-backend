@@ -8,11 +8,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "post", schema = "hanmat")
+@Table(name = "t_post", schema = "hanmat")
 public class Post {
     @Id
     @Column(name = "post_id")
@@ -37,29 +39,29 @@ public class Post {
     private String image4;
 
     @Column(name = "post_reg_date")
-    private String regDate;
+    private Date regDate;
 
     @Column(name = "post_reg_by")
     private String regBy;
 
     @Column(name = "post_mod_date")
-    private String modDate;
+    private Date modDate;
 
     @Column(name = "post_mod_by")
     private String modBy;
 
     @Column(name = "post_del_date")
-    private String delDate;
+    private Date delDate;
 
     @Column(name = "post_del_by")
     private String delBy;
 
     @Column(name = "post_is_hidden")
-    private boolean isNotice;
+    private String isHidden;
 
     @Column(name = "post_is_reported")
-    private boolean isReported;
+    private String isReported;
 
     @Column(name = "post_is_deleted")
-    private boolean isDeleted;
+    private String isDeleted;
 }

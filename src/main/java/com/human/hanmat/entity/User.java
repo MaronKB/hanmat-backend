@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,22 +15,14 @@ import java.sql.Date;
 @Data
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "t_user", schema = "hanmat")
 public class User {
     @Id
-    @Column(name = "user_id")
-    private String id;
-
-    @JsonIgnore
-    @Column(name = "user_pw")
-    private String password;
+    @Column(name = "user_email")
+    private String email;
 
     @Column(name = "user_nickname")
     private String nickname;
-
-    @Column(name = "user_email")
-    private String email;
 
     @Column(name = "user_reg_date")
     private Date regDate;
@@ -54,4 +47,18 @@ public class User {
 
     @Column(name = "user_is_admin")
     private String isAdmin;
+
+    @Builder
+    public User(String email, String nickname, Date regDate, String regBy, Date modDate, String modBy, Date delDate, String delBy, String isDeleted, String isAdmin) {
+        this.email = email;
+        this.nickname = nickname;
+        this.regDate = regDate;
+        this.regBy = regBy;
+        this.modDate = modDate;
+        this.modBy = modBy;
+        this.delDate = delDate;
+        this.delBy = delBy;
+        this.isDeleted = isDeleted;
+        this.isAdmin = isAdmin;
+    }
 }

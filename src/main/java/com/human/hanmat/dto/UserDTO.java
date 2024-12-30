@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserDTO {
-    private String id;
-    private String nickname;
     private String email;
+    private String name;
+    private String picture;
 
     @Builder
-    public UserDTO(String id, String nickname, String email) {
-        this.id = id;
-        this.nickname = nickname;
+    public UserDTO(String email, String name, String picture) {
         this.email = email;
+        this.name = name;
+        this.picture = picture;
     }
 }

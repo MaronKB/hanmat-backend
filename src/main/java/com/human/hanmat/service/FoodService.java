@@ -64,55 +64,81 @@ public class FoodService {
         return null;
     }
 
-    public List<FoodDTO> getAllFoodList(String lang) {
+    public List<FoodDTO> getAllFoodList(String lang, int amount) {
         try {
             JSONParser jsonParser = new JSONParser();
 
-            JSONArray infoBody = new JSONArray();
+            // 이미지 데이터 받아오기
             JSONArray imgBody = new JSONArray();
-
-            for (int i = 1; i <= 5; i++) {
-                JSONObject data = (JSONObject) jsonParser.parse(connect("menu-dscrn", lang));
-                JSONArray body = (JSONArray) data.get("body");
-                for (Object obj : body) {
-                    infoBody.add(obj);
-                }
-
-                JSONObject imageData = (JSONObject) jsonParser.parse(connect("food", "img"));
-                JSONArray imageBody = (JSONArray) imageData.get("body");
-                for (Object obj : imageBody) {
-                    imgBody.add(obj);
-                }
+            List<Integer> menuIdList = new ArrayList<>();
+            JSONObject imageData = (JSONObject) jsonParser.parse(connect("food", "img"));
+            JSONArray imageBody = (JSONArray) imageData.get("body");
+            for (Object obj : imageBody) {
+                int menuId = Integer.parseInt(((JSONObject) obj).get("MENU_ID").toString());
+                menuIdList.add(menuId);
+                imgBody.add(obj);
             }
 
+            List<String> menuNameList = new ArrayList<>();
             List<FoodDTO> foodList = new ArrayList<>();
+            int pageNo = 1;
 
-            for (Object obj : Objects.requireNonNull(infoBody)) {
-                JSONObject jsonObj = (JSONObject) obj;
-                System.out.println(jsonObj);
-                String menuId = jsonObj.get("MENU_ID").toString();
-                String menuNm = jsonObj.get("MENU_NM").toString();
-                String menuDscrn = (jsonObj.get("MENU_DSCRN") == null) ? "" : jsonObj.get("MENU_DSCRN").toString();
-                String menuCtgryLclasNm = jsonObj.get("MENU_CTGRY_LCLAS_NM").toString();
-
-                if (!menuCtgryLclasNm.equals("한식") && !menuCtgryLclasNm.equals("Korean Cuisine") && !menuCtgryLclasNm.equals("韩国料理")) {
-                    continue;
+            while (true) {
+                JSONObject data = (JSONObject) jsonParser.parse(connect("menu-dscrn", lang, pageNo));
+                JSONArray body = (JSONArray) data.get("body");
+                if (body.isEmpty()) {
+                    break;
                 }
 
-                String menuImg = findMenuImageById(menuId, Objects.requireNonNull(imgBody));
+                for (Object obj : body) {
+                    // 중복 방지
+                    String menuName = ((JSONObject) obj).get("MENU_NM").toString();
+                    if (menuNameList.contains(menuName)) {
+                        continue;
+                    } else {
+                        menuNameList.add(menuName);
+                    }
 
-                if (menuImg == null) {
-                    continue;
+                    // 이미지가 있는 메뉴만 가져오기
+                    int menuId = Integer.parseInt(((JSONObject) obj).get("MENU_ID").toString());
+                    if (!menuIdList.contains(menuId)) {
+                        continue;
+                    }
+
+                    // 한식 메뉴만 가져오기
+                    String menuCtgryLclasNm = ((JSONObject) obj).get("MENU_CTGRY_LCLAS_NM").toString();
+                    if (!menuCtgryLclasNm.equals("한식") && !menuCtgryLclasNm.equals("Korean Cuisine") && !menuCtgryLclasNm.equals("韩国料理")) {
+                        continue;
+                    }
+
+                    // 메뉴 정보 가져오기
+                    JSONObject jsonObj = (JSONObject) obj;
+                    String menuNm = jsonObj.get("MENU_NM").toString();
+                    String menuDscrn = (jsonObj.get("MENU_DSCRN") == null) ? "" : jsonObj.get("MENU_DSCRN").toString();
+                    String menuCtgrySclasNm = (jsonObj.get("MENU_CTGRY_SCLAS_NM") == null) ? "" : jsonObj.get("MENU_CTGRY_SCLAS_NM").toString();
+                    String menuImg = findMenuImageById(String.valueOf(menuId), Objects.requireNonNull(imgBody));
+
+                    // DTO에 저장
+                    FoodDTO foodDTO = new FoodDTO();
+                    foodDTO.setId(String.valueOf(menuId));
+                    foodDTO.setName(menuNm);
+                    foodDTO.setDscrn(menuDscrn);
+                    foodDTO.setCategory(menuCtgrySclasNm);
+                    foodDTO.setImage(menuImg);
+
+                    foodList.add(foodDTO);
+
+                    // amount만큼 가져왔으면 종료
+                    if (foodList.size() >= amount) {
+                        break;
+                    }
                 }
 
-                FoodDTO foodDTO = new FoodDTO();
-                foodDTO.setId(menuId);
-                foodDTO.setName(menuNm);
-                foodDTO.setDscrn(menuDscrn);
-                foodDTO.setCategory(menuCtgryLclasNm);
-                foodDTO.setImage(menuImg);
-
-                foodList.add(foodDTO);
+                if (foodList.size() >= amount || pageNo > 10) {
+                    break;
+                } else {
+                    pageNo++;
+                }
             }
 
             return foodList;

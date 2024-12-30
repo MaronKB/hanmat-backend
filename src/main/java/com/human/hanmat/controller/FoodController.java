@@ -20,10 +20,19 @@ public class FoodController {
 
     @GetMapping("/all/{lang}")
     public Response<List<FoodDTO>> getAllFoodList(@PathVariable String lang) {
-        List<FoodDTO> foodList = foodService.getAllFoodList(lang);
+        String langStr = switch (lang) {
+            case "ko" -> "korean";
+            case "en" -> "eng";
+            case "zh" -> "chchr";
+            case "ja" -> "jpnse";
+            default -> "eng";
+        };
+        List<FoodDTO> foodList = foodService.getAllFoodList(langStr, 60);
+
+        System.out.println("foodList: " + foodList);
         if (foodList == null) {
             return new Response<>(null, "Fail", false, null);
         }
-        return new Response<>(foodService.getAllFoodList(lang), "Success", true, null);
+        return new Response<>(foodList, "Success", true, null);
     }
 }

@@ -7,14 +7,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class RestaurantDTO {
-    private Long id;
+    private int id;
     private String name;
     private String lmmAddr;
     private String roadAddr;
     private boolean isClosed;
 
     @Builder
-    public RestaurantDTO(Long id, String name, String lmmAddr, String roadAddr, boolean isClosed) {
+    public RestaurantDTO(int id, String name, String lmmAddr, String roadAddr, boolean isClosed) {
         this.id = id;
         this.name = name;
         this.lmmAddr = lmmAddr;

@@ -27,11 +27,19 @@ create table t_restaurant (
     restaurant_x float not null,
     restaurant_y float not null,
     restaurant_reg_date date default current_date not null,
-    restaurant_reg_by varchar2(20 char) default 'system' references t_user(user_email) not null,
+    restaurant_reg_by varchar2(20 char) default 'system@hanmat.com' references t_user(user_email) not null,
     restaurant_last_mod_date date default current_date not null,
-    restaurant_last_mod_by varchar2(20 char) default 'system' references t_user(user_email) not null,
+    restaurant_last_mod_by varchar2(20 char) default 'system@hanmat.com' references t_user(user_email) not null,
     restaurant_is_closed varchar2(1 char) default 'N' not null
 );
+
+create sequence seq_restaurant_id start with 1 increment by 1 nocache;
+create or replace trigger trg_restaurant_id
+    before insert on t_restaurant
+    for each row
+begin
+    select seq_restaurant_id.nextval into :new.restaurant_id from dual;
+end;
 
 create table t_post (
     post_id int primary key,
@@ -53,6 +61,14 @@ create table t_post (
     post_is_deleted varchar2(1 char) default 'N' not null
 );
 
+create sequence seq_post_id start with 1 increment by 1 nocache;
+create or replace trigger trg_post_id
+    before insert on t_post
+    for each row
+begin
+    select seq_post_id.nextval into :new.post_id from dual;
+end;
+
 create table t_comment (
     comment_id int primary key,
     comment_content varchar2(4000 char) not null,
@@ -67,3 +83,57 @@ create table t_comment (
     comment_is_reported varchar2(1 char) default 'N' not null,
     comment_is_deleted varchar2(1 char) default 'N' not null
 );
+
+create sequence seq_comment_id start with 1 increment by 1 nocache;
+create or replace trigger trg_comment_id
+    before insert on t_comment
+    for each row
+begin
+    select seq_comment_id.nextval into :new.comment_id from dual;
+end;
+
+create table t_food_kr (
+    food_id int primary key,
+    food_name varchar2(100 char) not null,
+    food_dscrn varchar2(4000 char) null,
+    food_category varchar2(100 char) null,
+    food_image varchar2(200 char) null
+);
+
+create table t_food_jp (
+    food_id int primary key,
+    food_name varchar2(100 char) not null,
+    food_dscrn varchar2(4000 char) null,
+    food_category varchar2(100 char) null,
+    food_image varchar2(200 char) null
+);
+
+create table t_food_en (
+    food_id int primary key,
+    food_name varchar2(100 char) not null,
+    food_dscrn varchar2(4000 char) null,
+    food_category varchar2(100 char) null,
+    food_image varchar2(200 char) null
+);
+
+create sequence seq_food_id start with 1 increment by 1 nocache;
+create or replace trigger trg_food_kr_id
+    before insert on t_food_kr
+    for each row
+begin
+    select seq_food_id.nextval into :new.food_id from dual;
+end;
+
+create or replace trigger trg_food_jp_id
+    before insert on t_food_jp
+    for each row
+begin
+    select seq_food_id.nextval into :new.food_id from dual;
+end;
+
+create or replace trigger trg_food_en_id
+    before insert on t_food_en
+    for each row
+begin
+    select seq_food_id.nextval into :new.food_id from dual;
+end;

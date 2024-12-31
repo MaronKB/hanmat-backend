@@ -1,7 +1,9 @@
 package com.human.hanmat.controller;
 
 import com.human.hanmat.dto.FoodDTO;
+import com.human.hanmat.entity.FoodKR;
 import com.human.hanmat.entity.Response;
+import com.human.hanmat.service.FoodApiService;
 import com.human.hanmat.service.FoodService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +20,28 @@ public class FoodController {
     @Autowired
     private FoodService foodService;
 
-    @GetMapping("/all/{lang}")
+    @Autowired
+    private FoodApiService foodApiService;
+
+    @GetMapping("/{lang}")
+    public Response<List<FoodDTO>> getFoodList(HttpServletRequest request, @PathVariable String lang) {
+        List<FoodDTO> foodList = foodService.getFoodList(lang);
+        return new Response<>(foodList, "Success", true, null);
+    }
+
+    @Deprecated
+    // @GetMapping("/all/{lang}")
     public Response<List<FoodDTO>> getAllFoodList(@PathVariable String lang) {
         String langStr = switch (lang) {
             case "ko" -> "korean";
             case "en" -> "eng";
             case "zh" -> "chchr";
-            case "ja" -> "jpnse";
+            case "jp" -> "jpnse";
             default -> "eng";
         };
-        List<FoodDTO> foodList = foodService.getAllFoodList(langStr, 60);
+        System.out.println("lang: " + lang);
+        System.out.println("langStr: " + langStr);
+        List<FoodDTO> foodList = foodApiService.getAllFoodList(langStr, 60);
 
         System.out.println("foodList: " + foodList);
         if (foodList == null) {

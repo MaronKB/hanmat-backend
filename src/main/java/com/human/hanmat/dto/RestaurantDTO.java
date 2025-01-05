@@ -13,16 +13,20 @@ public class RestaurantDTO {
     private String name;
     private String lmmAddr;
     private String roadAddr;
+    private double latitude;
+    private double longitude;
     private Date regDate;
-    private String isClosed;
+    private boolean closed;
 
     @Builder
-    public RestaurantDTO(int id, String name, String lmmAddr, String roadAddr,Date regDate, String isClosed) {
+    public RestaurantDTO(int id, String name, String lmmAddr, String roadAddr, double latitude, double longitude, Date regDate, boolean closed) {
         this.id = id;
         this.name = name;
         this.lmmAddr = lmmAddr;
         this.roadAddr = roadAddr;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.regDate = regDate;
-        this.isClosed = isClosed;
+        this.closed = closed;
     }
 }

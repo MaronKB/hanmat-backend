@@ -47,25 +47,25 @@ public class RestaurantService {
     public List<RestaurantDTO> search(LocationDTO location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
+        double minLatitude = latitude - 0.01;
+        double maxLatitude = latitude + 0.01;
+        double minLongitude = longitude - 0.01;
+        double maxLongitude = longitude + 0.01;
         List<RestaurantDTO> restaurantList = new ArrayList<>();
 
-        List<Restaurant> restaurants = restaurantRepository.findAll();
+        List<Restaurant> restaurants = restaurantRepository.findByLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
+
+        System.out.println("size: " + restaurants.size());
         for (Restaurant restaurant: restaurants) {
-            double restaurantLatitude = restaurant.getX();
-            System.out.println("restaurantLatitude: " + restaurantLatitude);
-            double restaurantLongitude = restaurant.getY();
-            System.out.println("restaurantLongitude: " + restaurantLongitude);
-            double distance = Math.sqrt(Math.pow(restaurantLatitude - latitude, 2) + Math.pow(restaurantLongitude - longitude, 2));
-            System.out.println("distance: " + distance);
-            if (distance < 0.01) {
-                RestaurantDTO restaurantDTO = new RestaurantDTO();
-                restaurantDTO.setId(restaurant.getId());
-                restaurantDTO.setName(restaurant.getName());
-                restaurantDTO.setLmmAddr(restaurant.getLmmAddr());
-                restaurantDTO.setRoadAddr(restaurant.getRoadAddr());
-                restaurantDTO.setClosed(Objects.equals(restaurant.getIsClosed(), "Y"));
-                restaurantList.add(restaurantDTO);
-            }
+            RestaurantDTO restaurantDTO = new RestaurantDTO();
+            restaurantDTO.setId(restaurant.getId());
+            restaurantDTO.setName(restaurant.getName());
+            restaurantDTO.setLmmAddr(restaurant.getLmmAddr());
+            restaurantDTO.setRoadAddr(restaurant.getRoadAddr());
+            restaurantDTO.setLatitude(restaurant.getY());
+            restaurantDTO.setLongitude(restaurant.getX());
+            restaurantDTO.setClosed(Objects.equals(restaurant.getIsClosed(), "Y"));
+            restaurantList.add(restaurantDTO);
         };
         return restaurantList;
     }

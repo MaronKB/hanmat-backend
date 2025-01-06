@@ -6,6 +6,7 @@ import com.human.hanmat.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -17,6 +18,10 @@ public class UserService {
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .nickname(userDTO.getName())
+                .regDate(new Date(System.currentTimeMillis()))
+                .regBy("system@hanmat.com")
+                .isDeleted("N")
+                .isAdmin("N")
                 .build();
         return userRepository.save(user);
     }

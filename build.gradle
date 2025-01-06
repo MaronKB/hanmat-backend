@@ -32,6 +32,7 @@ dependencies {
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'org.locationtech.proj4j:proj4j:1.2.2'
     implementation 'org.locationtech.proj4j:proj4j-epsg:1.2.2'
+    implementation 'com.opencsv:opencsv:5.5'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

@@ -19,7 +19,6 @@ public class RestaurantController {
 
     @PostMapping("/nearby")
     public Response<?> getNearbyRestaurants(@RequestBody LocationDTO location) {
-        System.out.println(location);
         return new Response<>(restaurantService.search(location), "Success", true, null);
     }
 }

@@ -1,14 +1,16 @@
 package com.human.hanmat.controller;
 
-//import com.human.hanmat.convert.GeoConvert;
+import com.human.hanmat.convert.GeoConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 public class CommonController {
-//    @Autowired
-//    private GeoConvert geoConvert;
+    @Autowired
+    private GeoConvert geoConvert;
 
     @GetMapping("/")
     public String index() {
@@ -20,9 +22,9 @@ public class CommonController {
         return "api-/";
     }
 
-//    @GetMapping("/convert")
-//    public String convert() {
-//        geoConvert.convert();
-//        return "convert-/";
-//    }
+    @GetMapping("/convert")
+    public String convert() throws IOException {
+        geoConvert.convert();
+        return "convert-/";
+    }
 }

@@ -23,6 +23,9 @@ public class RestaurantService {
     public void add(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
     }
+    public void addMany(List<Restaurant> restaurants) {
+        restaurantRepository.saveAll(restaurants);
+    }
 
     public Restaurant read(int id) {
         return restaurantRepository.findById((long) id).orElse(null);
@@ -47,15 +50,14 @@ public class RestaurantService {
     public List<RestaurantDTO> search(LocationDTO location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-        double minLatitude = latitude - 0.01;
-        double maxLatitude = latitude + 0.01;
-        double minLongitude = longitude - 0.01;
-        double maxLongitude = longitude + 0.01;
+        double minLatitude = latitude - 0.002;
+        double maxLatitude = latitude + 0.002;
+        double minLongitude = longitude - 0.002;
+        double maxLongitude = longitude + 0.002;
         List<RestaurantDTO> restaurantList = new ArrayList<>();
 
         List<Restaurant> restaurants = restaurantRepository.findByLocation(minLatitude, maxLatitude, minLongitude, maxLongitude);
 
-        System.out.println("size: " + restaurants.size());
         for (Restaurant restaurant: restaurants) {
             RestaurantDTO restaurantDTO = new RestaurantDTO();
             restaurantDTO.setId(restaurant.getId());

@@ -18,6 +18,7 @@ public class UserService {
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .nickname(userDTO.getName())
+                .profileImage(userDTO.getPicture())
                 .regDate(new Date(System.currentTimeMillis()))
                 .regBy("system@hanmat.com")
                 .isDeleted("N")
@@ -30,6 +31,9 @@ public class UserService {
         User user = userRepository.findByEmail(userDTO.getEmail());
         if (user == null) {
             user = register(userDTO);
+        } else {
+            user.setProfileImage(userDTO.getPicture());
+            userRepository.save(user);
         }
         return user;
     }

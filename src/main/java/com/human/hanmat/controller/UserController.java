@@ -24,10 +24,4 @@ public class UserController {
     public Response<?> login(@RequestBody UserDTO userData) {
         return new Response<>(userService.login(userData), "Success", true, null);
     }
-
-    @PostMapping("/register")
-    @ResponseStatus(HttpStatus.OK)
-    public Response<?> register(@RequestBody String email, @RequestBody String password) {
-        return null;
-    }
 }

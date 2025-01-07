@@ -1,5 +1,6 @@
 package com.human.hanmat.dto;
 
+import com.human.hanmat.entity.Restaurant;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,5 +29,16 @@ public class RestaurantDTO {
         this.longitude = longitude;
         this.regDate = regDate;
         this.closed = closed;
+    }
+
+    public RestaurantDTO(Restaurant restaurant) {
+        this.id = restaurant.getId();
+        this.name = restaurant.getName();
+        this.lmmAddr = restaurant.getLmmAddr();
+        this.roadAddr = restaurant.getRoadAddr();
+        this.latitude = restaurant.getY();
+        this.longitude = restaurant.getX();
+        this.regDate = restaurant.getRegDate();
+        this.closed = (restaurant.getIsClosed().equals("Y"));
     }
 }

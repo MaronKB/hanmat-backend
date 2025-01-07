@@ -7,7 +7,12 @@ import com.human.hanmat.entity.RestaurantTest;
 import com.human.hanmat.repository.RestaurantRepository;
 import com.human.hanmat.repository.RestaurantTestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +52,16 @@ public class RestaurantService {
         return restaurantRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<RestaurantDTO> getPage(int page, int size, String sort) {
+        List<Restaurant> restaurantPage = restaurantRepository.findAllByOrderByAsc((page - 1) * size, (page) * size, sort);
+        List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
+        for (Restaurant restaurant: restaurantPage) {
+            restaurantDTOList.add(new RestaurantDTO(restaurant));
+        }
+        return restaurantDTOList;
+    }
+
     public List<RestaurantDTO> search(LocationDTO location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
@@ -70,5 +85,9 @@ public class RestaurantService {
             restaurantList.add(restaurantDTO);
         };
         return restaurantList;
+    }
+
+    public int getTotal() {
+        return (int) restaurantRepository.count();
     }
 }

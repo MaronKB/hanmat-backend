@@ -13,6 +13,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<?> findById(@PathVariable String email) {
+        return new Response<>(userService.findByEmail(email), "Success", true, null);
+    }
+
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
     public Response<?> findAll() {

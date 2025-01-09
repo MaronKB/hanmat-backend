@@ -75,6 +75,7 @@ public class Post {
     private String isDeleted;
 
     public Post(PostDTO post) {
+        System.out.println("Mapping rating value from DTO: " + post.getRating()); // 값 확인
         this.id = post.getId();
         this.title = post.getTitle();
         this.author = post.getAuthor();

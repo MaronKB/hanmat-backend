@@ -28,7 +28,19 @@ public class PostService {
         System.out.println("delete");
     }
 
+    //전체 리뷰 조회
     public List<Post> findAll() {
         return postRepository.findAll();
     }
+
+    // 사용자가 작성한 리뷰 조회
+    public List<Post> findMyReviews(String userEmail) {
+        return postRepository.findByRegBy(userEmail);
+    }
+
+    // 리뷰 저장
+    public Post saveReview(Post post) {
+        return postRepository.save(post);
+    }
 }
+

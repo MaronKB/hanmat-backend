@@ -14,6 +14,7 @@ public class RestaurantController {
 
     @GetMapping("/all")
     public Response<?> findAll() {
+
         return new Response<>(restaurantService.findAll(), "Success", true, null);
     }
 

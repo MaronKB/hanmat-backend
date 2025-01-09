@@ -22,6 +22,9 @@ public class User {
     @Column(name = "user_nickname")
     private String nickname;
 
+    @Column(name = "user_profile_image")
+    private String profileImage;
+
     @Column(name = "user_reg_date")
     private Date regDate;
 
@@ -47,9 +50,10 @@ public class User {
     private String isAdmin;
 
     @Builder
-    public User(String email, String nickname, Date regDate, String regBy, Date modDate, String modBy, Date delDate, String delBy, String isDeleted, String isAdmin) {
+    public User(String email, String nickname, String profileImage, Date regDate, String regBy, Date modDate, String modBy, Date delDate, String delBy, String isDeleted, String isAdmin) {
         this.email = email;
         this.nickname = nickname;
+        this.profileImage = profileImage;
         this.regDate = regDate;
         this.regBy = regBy;
         this.modDate = modDate;

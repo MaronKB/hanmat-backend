@@ -18,13 +18,13 @@ import java.sql.Date;
 public class Comment {
     @Id
     @Column(name = "comment_id")
-    private int id;
+    private Long id;
 
     @Column(name = "comment_content")
     private String content;
 
     @Column(name = "comment_post_id")
-    private int postId;
+    private Long postId;
 
     @Column(name = "comment_reg_date")
     private Date regDate;

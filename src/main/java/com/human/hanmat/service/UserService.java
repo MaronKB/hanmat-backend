@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,6 +19,7 @@ public class UserService {
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .nickname(userDTO.getName())
+                .profileImage(userDTO.getPicture())
                 .regDate(new Date(System.currentTimeMillis()))
                 .regBy("system@hanmat.com")
                 .isDeleted("N")
@@ -30,6 +32,9 @@ public class UserService {
         User user = userRepository.findByEmail(userDTO.getEmail());
         if (user == null) {
             user = register(userDTO);
+        } else {
+            user.setProfileImage(userDTO.getPicture());
+            userRepository.save(user);
         }
         return user;
     }
@@ -40,7 +45,21 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(String id) {
-        return null;
+    public List<UserDTO> getPage(int page, int size, String sort) {
+        List<User> userPage = userRepository.findAllByOrderByAsc(page, size, sort);
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user: userPage) {
+            userDTOList.add(new UserDTO(user));
+        }
+        return userDTOList;
+    }
+
+    public int getTotal() {
+        return (int) userRepository.count();
+    }
+
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return new UserDTO(user);
     }
 }

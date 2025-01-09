@@ -9,9 +9,6 @@ import java.io.IOException;
 
 @RestController
 public class CommonController {
-    @Autowired
-    private GeoConvert geoConvert;
-
     @GetMapping("/")
     public String index() {
         return "index-/";
@@ -20,11 +17,5 @@ public class CommonController {
     @GetMapping("/api")
     public String api() {
         return "api-/";
-    }
-
-    @GetMapping("/convert")
-    public String convert() throws IOException {
-        geoConvert.convert();
-        return "convert-/";
     }
 }

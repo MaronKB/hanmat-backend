@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Deprecated
 public class GeoConvert {
     @Autowired
     private RestaurantService restaurantService;

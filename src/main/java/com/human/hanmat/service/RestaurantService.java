@@ -3,22 +3,19 @@ package com.human.hanmat.service;
 import com.human.hanmat.dto.LocationDTO;
 import com.human.hanmat.dto.RestaurantDTO;
 import com.human.hanmat.entity.Restaurant;
-import com.human.hanmat.entity.RestaurantTest;
 import com.human.hanmat.repository.RestaurantRepository;
-import com.human.hanmat.repository.RestaurantTestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
-    private final RestaurantTestRepository restaurantTestRepository;
 
     public void add(Restaurant restaurant) {
         restaurantRepository.save(restaurant);
@@ -35,16 +32,22 @@ public class RestaurantService {
         restaurantRepository.save(restaurant);
     }
 
-    public void update(RestaurantTest restaurant) {
-        restaurantTestRepository.save(restaurant);
-    }
-
     public void delete() {
         System.out.println("delete");
     }
 
     public List<Restaurant> findAll() {
         return restaurantRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<RestaurantDTO> getPage(int page, int size, String sort) {
+        List<Restaurant> restaurantPage = restaurantRepository.findAllByOrderByAsc((page - 1) * size, (page) * size, sort);
+        List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
+        for (Restaurant restaurant: restaurantPage) {
+            restaurantDTOList.add(new RestaurantDTO(restaurant));
+        }
+        return restaurantDTOList;
     }
 
     public List<RestaurantDTO> search(LocationDTO location) {
@@ -70,5 +73,9 @@ public class RestaurantService {
             restaurantList.add(restaurantDTO);
         };
         return restaurantList;
+    }
+
+    public int getTotal() {
+        return (int) restaurantRepository.count();
     }
 }

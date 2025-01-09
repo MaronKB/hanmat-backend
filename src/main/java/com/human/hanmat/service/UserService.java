@@ -58,7 +58,8 @@ public class UserService {
         return (int) userRepository.count();
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+        return new UserDTO(user);
     }
 }

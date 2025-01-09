@@ -1,12 +1,11 @@
 package com.human.hanmat.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.human.hanmat.dto.PostDTO;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.sql.Date;
 
@@ -18,13 +17,23 @@ import java.sql.Date;
 public class Post {
     @Id
     @Column(name = "post_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "post_title")
     private String title;
 
+    @Column(name = "post_author")
+    private String author;
+
     @Column(name = "post_content")
     private String content;
+
+    @Column(name = "post_rating")
+    private int rating;
+
+    @Column(name = "post_restaurant_id")
+    private int restaurantId;
 
     @Column(name = "post_image_1")
     private String image1;
@@ -64,4 +73,35 @@ public class Post {
 
     @Column(name = "post_is_deleted")
     private String isDeleted;
+
+    public Post(PostDTO post) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.author = post.getAuthor();
+        this.content = post.getContent();
+        this.rating = post.getRating();
+        this.restaurantId = post.getRestaurantId();
+        this.image1 = post.getImage1();
+        this.image2 = post.getImage2();
+        this.image3 = post.getImage3();
+        this.image4 = post.getImage4();
+
+        if (post.getRegDate() == null) {
+            this.regDate = new Date(System.currentTimeMillis());
+        } else {
+            this.regDate = post.getRegDate();
+        }
+        if (post.getRegBy() == null) {
+            this.regBy = "system@hanmat.com";
+        } else {
+            this.regBy = post.getRegBy();
+        }
+
+        this.modDate = post.getModDate();
+        this.modBy = post.getModBy();
+
+        this.isHidden = post.isHidden() ? "Y" : "N";
+        this.isReported = post.isReported() ? "Y" : "N";
+        this.isDeleted = post.isDeleted() ? "Y" : "N";
+    }
 }

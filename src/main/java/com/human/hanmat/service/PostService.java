@@ -23,8 +23,10 @@ public class PostService {
     }
 
     // 리뷰 저장
-    public Post saveReview(Post post) {
-        return postRepository.save(post);
+    public PostDTO saveReview(PostDTO post) {
+        Post newPost = new Post(post);
+        Post savedPost = postRepository.save(newPost);
+        return new PostDTO(savedPost);
     }
 
     public List<PostDTO> getPage(int page, int size, String sort) {

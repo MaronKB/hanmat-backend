@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -42,6 +43,19 @@ public class UserService {
         System.out.println("findAll");
         System.out.println(userRepository.findAll());
         return userRepository.findAll();
+    }
+
+    public List<UserDTO> getPage(int page, int size, String sort) {
+        List<User> userPage = userRepository.findAllByOrderByAsc(page, size, sort);
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for (User user: userPage) {
+            userDTOList.add(new UserDTO(user));
+        }
+        return userDTOList;
+    }
+
+    public int getTotal() {
+        return (int) userRepository.count();
     }
 
     public User findByEmail(String email) {

@@ -1,5 +1,6 @@
 package com.human.hanmat.dto;
 
+import com.human.hanmat.entity.Post;
 import lombok.*;
 
 @Data
@@ -22,5 +23,15 @@ public class PostDTO {
         this.image2 = image2;
         this.image3 = image3;
         this.image4 = image4;
+    }
+
+    public PostDTO(Post post) {
+        this.id = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.image1 = post.getImage1();
+        this.image2 = post.getImage2();
+        this.image3 = post.getImage3();
+        this.image4 = post.getImage4();
     }
 }

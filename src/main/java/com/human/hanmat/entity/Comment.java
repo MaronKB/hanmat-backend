@@ -20,6 +20,9 @@ public class Comment {
     @Column(name = "comment_id")
     private Long id;
 
+    @Column(name = "comment_author")
+    private String author;
+
     @Column(name = "comment_content")
     private String content;
 

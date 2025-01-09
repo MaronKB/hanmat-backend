@@ -47,8 +47,8 @@ public class PostController {
 
     // 3. 리뷰 저장
     @PostMapping("/save")
-    public Response<Post> saveReview(@RequestBody Post post) {
-        Post savedPost = postService.saveReview(post);
+    public Response<PostDTO> saveReview(@RequestBody PostDTO post) {
+        PostDTO savedPost = postService.saveReview(post);
         return new Response<>(savedPost, "Review saved successfully", true, null);
     }
 

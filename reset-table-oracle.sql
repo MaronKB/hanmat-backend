@@ -41,10 +41,15 @@ begin
     select seq_restaurant_id.nextval into :new.restaurant_id from dual;
 end;
 
+drop table t_comment;
+drop table t_post;
+
 create table t_post (
     post_id int primary key,
     post_title varchar2(100 char) not null,
+    post_author varchar2(50 char) not null references t_user(user_email),
     post_content varchar2(4000 char) not null,
+    post_rating int not null,
     post_restaurant_id int not null references t_restaurant(restaurant_id),
     post_image_1 varchar2(200 char) null,
     post_image_2 varchar2(200 char) null,
@@ -72,6 +77,7 @@ end;
 create table t_comment (
     comment_id int primary key,
     comment_content varchar2(4000 char) not null,
+    comment_author varchar2(50 char) not null references t_user(user_email),
     comment_post_id int not null references t_post(post_id),
     comment_reg_date date default current_date not null,
     comment_reg_by varchar2(20 char) not null references t_user(user_email),

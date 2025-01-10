@@ -46,7 +46,7 @@ public class UserService {
     }
 
     public List<UserDTO> getPage(int page, int size, String sort) {
-        List<User> userPage = userRepository.findAllByOrderByAsc(page, size, sort);
+        List<User> userPage = userRepository.findAllByOrderByAsc((page - 1) * size, (page) * size, sort);
         List<UserDTO> userDTOList = new ArrayList<>();
         for (User user: userPage) {
             userDTOList.add(new UserDTO(user));

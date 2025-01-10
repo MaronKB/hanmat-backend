@@ -42,6 +42,7 @@ public class RestaurantService {
 
     @Transactional(readOnly = true)
     public List<RestaurantDTO> getPage(int page, int size, String sort) {
+        System.out.println("page: " + page + ", size: " + size + ", sort: " + sort);
         List<Restaurant> restaurantPage = restaurantRepository.findAllByOrderByAsc((page - 1) * size, (page) * size, sort);
         List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
         for (Restaurant restaurant: restaurantPage) {

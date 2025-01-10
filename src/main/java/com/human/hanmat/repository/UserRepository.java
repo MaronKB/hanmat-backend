@@ -11,6 +11,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, String> {
     User findByEmail(String email);
 
-    @Query(value = "SELECT * FROM HANMAT.T_USER WHERE ROWNUM >= ?1 AND ROWNUM <= ?2 ORDER BY ?3", nativeQuery = true)
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, T_USER.* FROM HANMAT.T_USER ORDER BY ?3) WHERE RN BETWEEN ?1 AND ?2", nativeQuery = true)
     List<User> findAllByOrderByAsc(int page, int size, String sort);
 }

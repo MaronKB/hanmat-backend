@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
-    @Query(value = "SELECT * FROM HANMAT.T_RESTAURANT WHERE ROWNUM >= ?1 AND ROWNUM <= ?2 ORDER BY ?3", nativeQuery = true)
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, T_RESTAURANT.* FROM HANMAT.T_RESTAURANT ORDER BY ?3) WHERE RN BETWEEN ?1 AND ?2", nativeQuery = true)
     List<Restaurant> findAllByOrderByAsc(int start, int end, String sort);
 
     @Query(value = "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_Y > ?1 AND RESTAURANT_Y < ?2 AND RESTAURANT_X > ?3 AND RESTAURANT_X < ?4", nativeQuery = true)

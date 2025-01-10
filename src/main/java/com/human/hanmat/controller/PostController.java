@@ -48,6 +48,10 @@ public class PostController {
     // 3. 리뷰 저장
     @PostMapping("/save")
     public Response<PostDTO> saveReview(@RequestBody PostDTO post) {
+        // 요청으로 전달된 데이터 확인 (로그 출력)
+        System.out.println("Received PostDTO: " + post);
+        System.out.println("Received Rating: " + post.getRating()); // rating 필드 확인
+
         PostDTO savedPost = postService.saveReview(post);
         return new Response<>(savedPost, "Review saved successfully", true, null);
     }

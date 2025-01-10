@@ -28,6 +28,7 @@ public class PostDTO {
     private boolean isDeleted;
 
     public PostDTO(Post post) {
+        this.rating = post.getRating();
         this.id = post.getId();
         this.title = post.getTitle();
         this.author = post.getAuthor();

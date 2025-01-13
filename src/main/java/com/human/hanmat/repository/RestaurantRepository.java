@@ -18,28 +18,42 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByLocation(double minY, double maxY, double minX, double maxX);
 
 //    검색
-    @Query(value = "SELECT * FROM T_RESTAURANT WHERE LOWER(:fieldName) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY RESTAURANT_ID ASC OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY", nativeQuery = true)
-    List<Restaurant> findByField(@Param("fieldName") String fieldName,
-                                 @Param("keyword") String keyword,
-                                 @Param("offset") int offset,
-                                 @Param("limit") int limit);
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE LOWER(?1) LIKE LOWER('%' || ?2 || '%') ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?3 " +
+            ") WHERE RN >= ?4",
+            nativeQuery = true)
+    List<Restaurant> findByField(String fieldName, String keyword, int endRow, int startRow);
 
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(:fieldName) LIKE LOWER(CONCAT('%', :keyword, '%'))", nativeQuery = true)
-    int countByField(@Param("fieldName") String fieldName, @Param("keyword") String keyword);
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(?1) LIKE LOWER('%' || ?2 || '%')",
+            nativeQuery = true)
+    int countByField(String fieldName, String keyword);
 
-    @Query(value = "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE CONCAT('%', :keyword, '%') ORDER BY RESTAURANT_ID ASC OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY", nativeQuery = true)
-    List<Restaurant> findByRegDate(@Param("keyword") String keyword,
-                                   @Param("offset") int offset,
-                                   @Param("limit") int limit);
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE '%' || ?1 || '%' ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?2 " +
+            ") WHERE RN >= ?3",
+            nativeQuery = true)
+    List<Restaurant> findByRegDate(String keyword, int endRow, int startRow);
 
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE CONCAT('%', :keyword, '%')", nativeQuery = true)
-    int countByRegDate(@Param("keyword") String keyword);
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE '%' || ?1 || '%'",
+            nativeQuery = true)
+    int countByRegDate(String keyword);
 
-    @Query(value = "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = :closed ORDER BY RESTAURANT_ID ASC OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY", nativeQuery = true)
-    List<Restaurant> findByClosed(@Param("closed") String closed,
-                                  @Param("offset") int offset,
-                                  @Param("limit") int limit);
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1 ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?2 " +
+            ") WHERE RN >= ?3",
+            nativeQuery = true)
+    List<Restaurant> findByClosed(String closed, int endRow, int startRow);
 
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = :closed", nativeQuery = true)
-    int countByClosed(@Param("closed") String closed);
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1",
+            nativeQuery = true)
+    int countByClosed(String closed);
+
+
+
 }

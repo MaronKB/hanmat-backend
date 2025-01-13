@@ -87,15 +87,16 @@ public class RestaurantService {
 //    검색
     @Transactional(readOnly = true)
     public List<RestaurantDTO> searchByCategory(String category, String keyword, int page, int size) {
-        List<Restaurant> restaurantPage;
-        int offset = (page - 1) * size;
+        int startRow = (page - 1) * size + 1;
+        int endRow = page * size;
 
+        List<Restaurant> restaurantPage;
         if ("regDate".equalsIgnoreCase(category)) {
-            restaurantPage = restaurantRepository.findByRegDate(keyword, offset, size);
+            restaurantPage = restaurantRepository.findByRegDate(keyword, endRow, startRow);
         } else if ("closed".equalsIgnoreCase(category)) {
-            restaurantPage = restaurantRepository.findByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N", offset, size);
+            restaurantPage = restaurantRepository.findByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N", endRow, startRow);
         } else {
-            restaurantPage = restaurantRepository.findByField(category, keyword, offset, size);
+            restaurantPage = restaurantRepository.findByField(category, keyword, endRow, startRow);
         }
 
         List<RestaurantDTO> restaurantDTOList = new ArrayList<>();

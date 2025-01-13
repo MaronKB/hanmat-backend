@@ -13,6 +13,31 @@ import java.util.List;
 public class PostService {
     private final PostRepository postRepository;
 
+    private String getSortParameter(String sort) {
+        switch (sort) {
+            case "id":
+                return "post_id";
+            case "title":
+                return "post_title";
+            case "author":
+                return "post_author";
+            case "rating":
+                return "post_rating";
+            case "restaurantId":
+                return "post_restaurant_id";
+            case "regDate":
+                return "post_reg_date";
+            case "regBy":
+                return "post_reg_by";
+            case "modDate":
+                return "post_mod_date";
+            case "modBy":
+                return "post_mod_by";
+            default:
+                return "post_id";
+        }
+    }
+
     public List<Post> findAll() {
         return postRepository.findAll();
     }
@@ -31,7 +56,10 @@ public class PostService {
     }
 
     public List<PostDTO> getPage(int page, int size, String sort) {
-        List<Post> postPage = postRepository.findAllByOrderByDesc((page - 1) * size + 1, (page) * size, sort);
+        List<Post> postPage = (sort.equalsIgnoreCase("new"))
+                ? postRepository.findAllOrderByIdDesc((page - 1) * size + 1, (page) * size)
+                : postRepository.findAllOrderByIdAsc((page - 1) * size + 1, (page) * size);
+
         List<PostDTO> postDTOList = new java.util.ArrayList<>();
         for (Post post: postPage) {
             postDTOList.add(new PostDTO(post));
@@ -40,7 +68,10 @@ public class PostService {
     }
 
     public List<PostDTO> getPage(int page, int size, String sort, String email) {
-        List<Post> postPage = postRepository.findAllByEmailOrderByDesc((page - 1) * size + 1, (page) * size, sort, email);
+        List<Post> postPage = (sort.equalsIgnoreCase("new")
+                ? postRepository.findAllByEmailOrderByIdDesc((page - 1) * size + 1, (page) * size, email)
+                : postRepository.findAllByEmailOrderByIdAsc((page - 1) * size + 1, (page) * size, email));
+
         List<PostDTO> postDTOList = new java.util.ArrayList<>();
         for (Post post: postPage) {
             postDTOList.add(new PostDTO(post));

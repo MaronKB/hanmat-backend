@@ -31,7 +31,7 @@ public class PostController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public Response<?> findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sort) {
+    public Response<?> findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "new") String sort) {
         List<PostDTO> postPage = postService.getPage(page, size, sort);
         int total = postService.getTotal();
 
@@ -42,7 +42,7 @@ public class PostController {
 
     //2. 특정 사용자가 작성한 리뷰 조회
     @GetMapping("/my")
-    public Response<?> findMyReviews(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sort, @RequestParam(required = false) String email) {
+    public Response<?> findMyReviews(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "new") String sort, @RequestParam(required = false) String email) {
         if (email == null || email.isEmpty()) {
             return new Response<>(null, "User email is required", false, "400");
         }

@@ -4,6 +4,9 @@ import com.human.hanmat.dto.LocationDTO;
 import com.human.hanmat.dto.RestaurantDTO;
 import com.human.hanmat.entity.Restaurant;
 import com.human.hanmat.repository.RestaurantRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,5 +81,38 @@ public class RestaurantService {
 
     public int getTotal() {
         return (int) restaurantRepository.count();
+    }
+
+
+//    검색
+    @Transactional(readOnly = true)
+    public List<RestaurantDTO> searchByCategory(String category, String keyword, int page, int size) {
+        List<Restaurant> restaurantPage;
+        int offset = (page - 1) * size;
+
+        if ("regDate".equalsIgnoreCase(category)) {
+            restaurantPage = restaurantRepository.findByRegDate(keyword, offset, size);
+        } else if ("closed".equalsIgnoreCase(category)) {
+            restaurantPage = restaurantRepository.findByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N", offset, size);
+        } else {
+            restaurantPage = restaurantRepository.findByField(category, keyword, offset, size);
+        }
+
+        List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
+        for (Restaurant restaurant : restaurantPage) {
+            restaurantDTOList.add(new RestaurantDTO(restaurant));
+        }
+        return restaurantDTOList;
+    }
+
+    @Transactional(readOnly = true)
+    public int getTotalByCategory(String category, String keyword) {
+        if ("regDate".equalsIgnoreCase(category)) {
+            return restaurantRepository.countByRegDate(keyword);
+        } else if ("closed".equalsIgnoreCase(category)) {
+            return restaurantRepository.countByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N");
+        } else {
+            return restaurantRepository.countByField(category, keyword);
+        }
     }
 }

@@ -93,7 +93,7 @@ public class Post {
             this.regDate = post.getRegDate();
         }
         if (post.getRegBy() == null) {
-            this.regBy = "system@hanmat.com";
+            this.regBy = post.getAuthor().isEmpty() ?  "system@hanmat.com" : post.getAuthor();
         } else {
             this.regBy = post.getRegBy();
         }

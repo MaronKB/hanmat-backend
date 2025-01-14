@@ -91,12 +91,29 @@ public class RestaurantService {
         int endRow = page * size;
 
         List<Restaurant> restaurantPage;
-        if ("regDate".equalsIgnoreCase(category)) {
-            restaurantPage = restaurantRepository.findByRegDate(keyword, endRow, startRow);
-        } else if ("closed".equalsIgnoreCase(category)) {
-            restaurantPage = restaurantRepository.findByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N", endRow, startRow);
-        } else {
-            restaurantPage = restaurantRepository.findByField(category, keyword, endRow, startRow);
+
+        switch (category.toLowerCase()) {
+            case "name":
+                restaurantPage = restaurantRepository.findByName(keyword, endRow, startRow);
+                break;
+            case "location":
+                restaurantPage = restaurantRepository.findByLocation(keyword, endRow, startRow);
+                break;
+            case "roadaddress":
+                restaurantPage = restaurantRepository.findByRoadAddress(keyword, endRow, startRow);
+                break;
+            case "regdate":
+                restaurantPage = restaurantRepository.findByRegDate(keyword, endRow, startRow);
+                break;
+            case "closed":
+                String closedStatus = keyword.equals("폐업") ? "Y" : keyword.equals("영업 중") ? "N" : null;
+                if (closedStatus == null) {
+                    throw new IllegalArgumentException("Invalid value for closed: " + keyword);
+                }
+                restaurantPage = restaurantRepository.findByClosed(closedStatus, endRow, startRow);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid category: " + category);
         }
 
         List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
@@ -108,12 +125,24 @@ public class RestaurantService {
 
     @Transactional(readOnly = true)
     public int getTotalByCategory(String category, String keyword) {
-        if ("regDate".equalsIgnoreCase(category)) {
-            return restaurantRepository.countByRegDate(keyword);
-        } else if ("closed".equalsIgnoreCase(category)) {
-            return restaurantRepository.countByClosed("폐업".equalsIgnoreCase(keyword) ? "Y" : "N");
-        } else {
-            return restaurantRepository.countByField(category, keyword);
+        switch (category.toLowerCase()) {
+            case "name":
+                return restaurantRepository.countByName(keyword);
+            case "location":
+                return restaurantRepository.countByLocation(keyword);
+            case "roadaddress":
+                return restaurantRepository.countByRoadAddress(keyword);
+            case "regdate":
+                return restaurantRepository.countByRegDate(keyword);
+            case "closed":
+                String closedStatus = keyword.equals("폐업") ? "Y" : keyword.equals("영업 중") ? "N" : null;
+                if (closedStatus == null) {
+                    throw new IllegalArgumentException("Invalid value for closed: " + keyword);
+                }
+                return restaurantRepository.countByClosed(closedStatus);
+            default:
+                throw new IllegalArgumentException("Invalid category: " + category);
         }
     }
+
 }

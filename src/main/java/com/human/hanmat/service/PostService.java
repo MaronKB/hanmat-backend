@@ -83,8 +83,8 @@ public class PostService {
         return (int) postRepository.count();
     }
 
-    public int getTotal(String email) {
-        return postRepository.findByRegBy(email).size();
+    public int getTotal(String userEmail) {
+        return postRepository.findByRegBy(userEmail).size();
     }
 }
 

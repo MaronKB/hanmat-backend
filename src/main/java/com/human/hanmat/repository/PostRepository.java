@@ -4,6 +4,7 @@ import com.human.hanmat.entity.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -22,5 +23,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByEmailOrderByIdAsc(int start, int end, String email);
 
     // 1. 특정 사용자가 작성한 리뷰 조회
-    List<Post> findByRegBy(String regBy);
+    @Query("SELECT p FROM Post p WHERE p.regBy = :regBy")
+    List<Post> findByRegBy(@Param("regBy") String regBy);
 }

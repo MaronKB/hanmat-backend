@@ -5,36 +5,18 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Service
 public class FoodApiService {
+    private final CommonApiService CommonApiService = new CommonApiService();
     private static final String TOKEN = "nTSaKfYMjxWt6GPwWlIOyh3Kyn6BDPCU52gFe2W7f7Ea4j9iCw4CHWIJFBlCEYoG";
     private static final String PATH = "https://seoul.openapi.redtable.global/api";
-
-    public String getDataString(HttpURLConnection urlConnection) throws Exception {
-        InputStream is = urlConnection.getInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = br.readLine()) != null) {
-            sb.append(line);
-        }
-
-        urlConnection.disconnect();
-        return sb.toString();
-    }
 
     private String connect(String type, String lang) throws Exception {
         return connect(type, lang, 1);
@@ -50,7 +32,7 @@ public class FoodApiService {
         URL url = new URI(apiUrl.toString()).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
-        return getDataString(urlConnection);
+        return CommonApiService.getDataString(urlConnection);
     }
 
     private String findMenuImageById(String menuId, JSONArray imgBody) {

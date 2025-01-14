@@ -18,42 +18,79 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByLocation(double minY, double maxY, double minX, double maxX);
 
 //    검색
+@Query(value = "SELECT * FROM ( " +
+        "SELECT ROWNUM AS RN, T.* FROM ( " +
+        "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_NAME) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
+        ") T WHERE ROWNUM <= ?2 " +
+        ") WHERE RN >= ?3",
+        nativeQuery = true)
+List<Restaurant> findByName(String keyword, int endRow, int startRow);
+
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(RESTAURANT_NAME) LIKE LOWER('%' || ?1 || '%')",
+            nativeQuery = true)
+    int countByName(String keyword);
+
+    // 위치(restaurant_location) 기반 검색
     @Query(value = "SELECT * FROM ( " +
             "SELECT ROWNUM AS RN, T.* FROM ( " +
-            "SELECT * FROM T_RESTAURANT WHERE LOWER(?1) LIKE LOWER('%' || ?2 || '%') ORDER BY RESTAURANT_ID ASC " +
-            ") T WHERE ROWNUM <= ?3 " +
-            ") WHERE RN >= ?4",
-            nativeQuery = true)
-    List<Restaurant> findByField(String fieldName, String keyword, int endRow, int startRow);
-
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(?1) LIKE LOWER('%' || ?2 || '%')",
-            nativeQuery = true)
-    int countByField(String fieldName, String keyword);
-
-    @Query(value = "SELECT * FROM ( " +
-            "SELECT ROWNUM AS RN, T.* FROM ( " +
-            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE '%' || ?1 || '%' ORDER BY RESTAURANT_ID ASC " +
+            "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_LMM_ADDR) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
             ") T WHERE ROWNUM <= ?2 " +
             ") WHERE RN >= ?3",
             nativeQuery = true)
-    List<Restaurant> findByRegDate(String keyword, int endRow, int startRow);
+    List<Restaurant> findByLocation(String keyword, int endRow, int startRow);
 
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE LIKE '%' || ?1 || '%'",
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(RESTAURANT_LMM_ADDR) LIKE LOWER('%' || ?1 || '%')",
             nativeQuery = true)
-    int countByRegDate(String keyword);
+    int countByLocation(String keyword);
 
+    // 도로명 주소(restaurant_road_address) 기반 검색
     @Query(value = "SELECT * FROM ( " +
             "SELECT ROWNUM AS RN, T.* FROM ( " +
-            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1 ORDER BY RESTAURANT_ID ASC " +
+            "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_ROAD_ADDR) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
             ") T WHERE ROWNUM <= ?2 " +
             ") WHERE RN >= ?3",
             nativeQuery = true)
-    List<Restaurant> findByClosed(String closed, int endRow, int startRow);
+    List<Restaurant> findByRoadAddress(String keyword, int endRow, int startRow);
 
-    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1",
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(RESTAURANT_ROAD_ADDR) LIKE LOWER('%' || ?1 || '%')",
             nativeQuery = true)
-    int countByClosed(String closed);
+    int countByRoadAddress(String keyword);
 
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE = TO_DATE(?1, 'YYYY-MM-DD') ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?2 " +
+            ") WHERE RN >= ?3",
+            nativeQuery = true)
+    List<Restaurant> findByRegDate(String date, int endRow, int startRow);
+
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_REG_DATE = TO_DATE(?1, 'YYYY-MM-DD')",
+            nativeQuery = true)
+    int countByRegDate(String date);
+
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_IS_CLOSED) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?2 " +
+            ") WHERE RN >= ?3",
+            nativeQuery = true)
+    List<Restaurant> findByClosed(String keyword, int endRow, int startRow);
+
+    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(RESTAURANT_IS_CLOSED) LIKE LOWER('%' || ?1 || '%')",
+            nativeQuery = true)
+    int countByClosed(String keyword);
+
+//    @Query(value = "SELECT * FROM ( " +
+//            "SELECT ROWNUM AS RN, T.* FROM ( " +
+//            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1 ORDER BY RESTAURANT_ID ASC " +
+//            ") T WHERE ROWNUM <= ?2 " +
+//            ") WHERE RN >= ?3",
+//            nativeQuery = true)
+//    List<Restaurant> findByClosed(String closed, int endRow, int startRow);
+//
+//    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1",
+//            nativeQuery = true)
+//    int countByClosed(String closed);
 
 
 }

@@ -80,17 +80,4 @@ List<Restaurant> findByName(String keyword, int endRow, int startRow);
             nativeQuery = true)
     int countByClosed(String keyword);
 
-//    @Query(value = "SELECT * FROM ( " +
-//            "SELECT ROWNUM AS RN, T.* FROM ( " +
-//            "SELECT * FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1 ORDER BY RESTAURANT_ID ASC " +
-//            ") T WHERE ROWNUM <= ?2 " +
-//            ") WHERE RN >= ?3",
-//            nativeQuery = true)
-//    List<Restaurant> findByClosed(String closed, int endRow, int startRow);
-//
-//    @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE RESTAURANT_IS_CLOSED = ?1",
-//            nativeQuery = true)
-//    int countByClosed(String closed);
-
-
 }

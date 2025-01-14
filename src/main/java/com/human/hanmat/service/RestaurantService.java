@@ -145,4 +145,19 @@ public class RestaurantService {
         }
     }
 
+    @Transactional
+    public void updateRestaurant(RestaurantDTO restaurantDTO) {
+        Restaurant restaurant = restaurantRepository.findById((long) restaurantDTO.getId()) // 형 변환 추가
+                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found with ID: " + restaurantDTO.getId()));
+
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setLmmAddr(restaurantDTO.getLmmAddr());
+        restaurant.setRoadAddr(restaurantDTO.getRoadAddr());
+        restaurant.setRegDate(new java.sql.Date(restaurantDTO.getRegDate().getTime())); // Date 변환 추가
+        restaurant.setIsClosed(restaurantDTO.isClosed() ? "Y" : "N");
+
+        restaurantRepository.save(restaurant);
+    }
+
+
 }

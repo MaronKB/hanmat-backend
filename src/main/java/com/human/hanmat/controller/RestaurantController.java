@@ -53,4 +53,15 @@ public class RestaurantController {
 
         return new Response<>(pageData, "Success", true, null);
     }
+
+    @PutMapping("/update")
+    public Response<?> updateRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        try {
+            restaurantService.updateRestaurant(restaurantDTO);
+            return new Response<>(null, "Restaurant updated successfully", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "Failed to update restaurant: " + e.getMessage(), false, null);
+        }
+    }
+
 }

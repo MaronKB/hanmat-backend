@@ -42,9 +42,28 @@ public class PostService {
         return postRepository.findAll();
     }
 
-    // 사용자가 작성한 리뷰 조회
-    public List<Post> findMyReviews(String userEmail) {
-        return postRepository.findByRegBy(userEmail);
+//    // 사용자가 작성한 리뷰 조회
+//    public List<Post> findMyReviews(String userEmail) {
+//        return postRepository.findByRegBy(userEmail);
+//    }
+
+    // 특정 사용자가 작성한 리뷰 조회하기(정렬 조건 포함됨)
+    public List<Post> findMyReviews(String userEmail, String sort) {
+        List<Post> posts;
+        switch (sort.toLowerCase()) { // 정렬 조건 처리
+            case "new": // 추가: 최신순
+                posts = postRepository.findByRegByOrderByPostIdDesc(userEmail);
+                break;
+            case "old": // 추가: 오래된순
+                posts = postRepository.findByRegByOrderByRegDateAsc(userEmail);
+                break;
+            case "rating": // 수정: 별점 순
+                posts = postRepository.findByRegByOrderByRatingDesc(userEmail);
+                break;
+            default: // 기본 정렬 없음
+                posts = postRepository.findByRegBy(userEmail);
+        }
+        return posts;
     }
 
     // 리뷰 저장
@@ -55,27 +74,36 @@ public class PostService {
         return new PostDTO(savedPost);
     }
 
-    public List<PostDTO> getPage(int page, int size, String sort) {
-        List<Post> postPage = (sort.equalsIgnoreCase("new"))
-                ? postRepository.findAllOrderByIdDesc((page - 1) * size + 1, (page) * size)
-                : postRepository.findAllOrderByIdAsc((page - 1) * size + 1, (page) * size);
-
-        List<PostDTO> postDTOList = new java.util.ArrayList<>();
-        for (Post post: postPage) {
-            postDTOList.add(new PostDTO(post));
-        }
-        return postDTOList;
-    }
-
+    // 페이지 요청 (전체,특정 사용자)
     public List<PostDTO> getPage(int page, int size, String sort, String email) {
-        List<Post> postPage = (sort.equalsIgnoreCase("new")
-                ? postRepository.findAllByEmailOrderByIdDesc((page - 1) * size + 1, (page) * size, email)
-                : postRepository.findAllByEmailOrderByIdAsc((page - 1) * size + 1, (page) * size, email));
+        List<Post> postPage;
+        int start = (page - 1) * size + 1;
+        int end = page * size;
+
+        switch (sort.toLowerCase()) {
+            case "new":
+                postPage = (email == null)
+                        ? postRepository.findAllOrderByIdDesc(start, end)
+                        : postRepository.findAllByEmailOrderByIdDesc(start, end, email);
+                break;
+
+            case "rating":
+                postPage = (email == null)
+                        ? postRepository.findAllOrderByRatingDesc(start, end)
+                        : postRepository.findByRegByOrderByRatingDesc(email);
+                break;
+
+            case "old":
+            default:
+                postPage = (email == null)
+                        ? postRepository.findAllOrderByIdAsc(start, end)
+                        : postRepository.findAllByEmailOrderByIdAsc(start, end, email);
+                break;
+        }
 
         List<PostDTO> postDTOList = new java.util.ArrayList<>();
-        for (Post post: postPage) {
-            postDTOList.add(new PostDTO(post));
-        }
+        postPage.forEach(post -> postDTOList.add(new PostDTO(post)));
+
         return postDTOList;
     }
 
@@ -87,4 +115,3 @@ public class PostService {
         return postRepository.findByRegBy(userEmail).size();
     }
 }
-

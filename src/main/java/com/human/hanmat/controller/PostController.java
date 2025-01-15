@@ -2,14 +2,10 @@ package com.human.hanmat.controller;
 
 import com.human.hanmat.dto.Page;
 import com.human.hanmat.dto.PostDTO;
-import com.human.hanmat.entity.Post;
 import com.human.hanmat.entity.Response;
 import com.human.hanmat.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -56,7 +52,17 @@ public class PostController {
         }
 
         List<PostDTO> postPage = postService.getPage(page, size, sort, email);
-        int total = postService.getTotal(email);
+        int total = postService.getTotalByEmail(email);
+
+        Page<PostDTO> pageData = parseListToPage(postPage, total, page, size);
+
+        return new Response<>(pageData, "Success", true, null);
+    }
+
+    @GetMapping("/restaurant/{restaurantId}")
+    public Response<?> findByRestaurantId(@PathVariable Long restaurantId, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "new") String sort) {
+        List<PostDTO> postPage = postService.findAllByRestaurantId(restaurantId, page, size, sort);
+        int total = postService.getTotalByRestaurantId(restaurantId);
 
         Page<PostDTO> pageData = parseListToPage(postPage, total, page, size);
 

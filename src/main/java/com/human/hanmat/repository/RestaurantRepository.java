@@ -18,19 +18,18 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
     List<Restaurant> findByLocation(double minY, double maxY, double minX, double maxX);
 
 //    검색
-@Query(value = "SELECT * FROM ( " +
-        "SELECT ROWNUM AS RN, T.* FROM ( " +
-        "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_NAME) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
-        ") T WHERE ROWNUM <= ?2 " +
-        ") WHERE RN >= ?3",
-        nativeQuery = true)
-List<Restaurant> findByName(String keyword, int endRow, int startRow);
+    @Query(value = "SELECT * FROM ( " +
+            "SELECT ROWNUM AS RN, T.* FROM ( " +
+            "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_NAME) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
+            ") T WHERE ROWNUM <= ?2 " +
+            ") WHERE RN >= ?3",
+            nativeQuery = true)
+    List<Restaurant> findByName(String keyword, int endRow, int startRow);
 
     @Query(value = "SELECT COUNT(*) FROM T_RESTAURANT WHERE LOWER(RESTAURANT_NAME) LIKE LOWER('%' || ?1 || '%')",
             nativeQuery = true)
     int countByName(String keyword);
 
-    // 위치(restaurant_location) 기반 검색
     @Query(value = "SELECT * FROM ( " +
             "SELECT ROWNUM AS RN, T.* FROM ( " +
             "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_LMM_ADDR) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +
@@ -43,7 +42,6 @@ List<Restaurant> findByName(String keyword, int endRow, int startRow);
             nativeQuery = true)
     int countByLocation(String keyword);
 
-    // 도로명 주소(restaurant_road_address) 기반 검색
     @Query(value = "SELECT * FROM ( " +
             "SELECT ROWNUM AS RN, T.* FROM ( " +
             "SELECT * FROM T_RESTAURANT WHERE LOWER(RESTAURANT_ROAD_ADDR) LIKE LOWER('%' || ?1 || '%') ORDER BY RESTAURANT_ID ASC " +

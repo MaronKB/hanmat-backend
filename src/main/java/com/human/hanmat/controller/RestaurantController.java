@@ -64,4 +64,15 @@ public class RestaurantController {
         }
     }
 
+    @DeleteMapping("/delete")
+    public Response<?> deleteRestaurants(@RequestBody List<Long> ids) {
+        try {
+            restaurantService.deleteRestaurants(ids);
+            return new Response<>(null, "삭제가 완료되었습니다.", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "삭제 실패: " + e.getMessage(), false, null);
+        }
+    }
+
+
 }

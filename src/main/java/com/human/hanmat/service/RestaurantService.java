@@ -164,5 +164,23 @@ public class RestaurantService {
         restaurantRepository.deleteAllById(ids);
     }
 
+    @Transactional
+    public void addRestaurant(RestaurantDTO restaurantDTO) {
+        Restaurant restaurant = new Restaurant();
+        restaurant.setName(restaurantDTO.getName());
+        restaurant.setLmmAddr(restaurantDTO.getLmmAddr());
+        restaurant.setRoadAddr(restaurantDTO.getRoadAddr());
+        restaurant.setRegDate(restaurantDTO.getRegDate() != null ?
+                new java.sql.Date(restaurantDTO.getRegDate().getTime()) :
+                new java.sql.Date(System.currentTimeMillis()));
+        restaurant.setIsClosed(restaurantDTO.isClosed() ? "Y" : "N");
+
+
+        restaurant.setRegBy("system@hanmat.com");
+        restaurant.setLastModBy("system@hanmat.com");
+        restaurant.setLastModDate(new java.sql.Date(System.currentTimeMillis()));
+
+        restaurantRepository.save(restaurant);
+    }
 
 }

@@ -53,4 +53,26 @@ public class RestaurantController {
 
         return new Response<>(pageData, "Success", true, null);
     }
+
+    @PutMapping("/update")
+    public Response<?> updateRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        try {
+            restaurantService.updateRestaurant(restaurantDTO);
+            return new Response<>(null, "Restaurant updated successfully", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "Failed to update restaurant: " + e.getMessage(), false, null);
+        }
+    }
+
+    @DeleteMapping("/delete")
+    public Response<?> deleteRestaurants(@RequestBody List<Long> ids) {
+        try {
+            restaurantService.deleteRestaurants(ids);
+            return new Response<>(null, "삭제가 완료되었습니다.", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "삭제 실패: " + e.getMessage(), false, null);
+        }
+    }
+
+
 }

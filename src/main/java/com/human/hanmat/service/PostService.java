@@ -79,12 +79,28 @@ public class PostService {
         return postDTOList;
     }
 
+    public List<PostDTO> findAllByRestaurantId(Long restaurantId, int page, int size, String sort) {
+        List<Post> postPage = (sort.equalsIgnoreCase("new"))
+                ? postRepository.findAllByRestaurantIdOrderByIdDesc(restaurantId, (page - 1) * size + 1, (page) * size)
+                : postRepository.findAllByRestaurantIdOrderByIdAsc(restaurantId, (page - 1) * size + 1, (page) * size);
+
+        List<PostDTO> postDTOList = new java.util.ArrayList<>();
+        for (Post post: postPage) {
+            postDTOList.add(new PostDTO(post));
+        }
+        return postDTOList;
+    }
+
     public int getTotal() {
         return (int) postRepository.count();
     }
 
-    public int getTotal(String email) {
-        return postRepository.findByRegBy(email).size();
+    public int getTotalByEmail(String email) {
+        return postRepository.countAllByEmail(email);
+    }
+
+    public int getTotalByRestaurantId(Long restaurantId) {
+        return postRepository.countAllByRestaurantId(restaurantId);
     }
 }
 

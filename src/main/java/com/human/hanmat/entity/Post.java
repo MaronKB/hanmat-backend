@@ -74,6 +74,7 @@ public class Post {
     @Column(name = "post_is_deleted")
     private String isDeleted;
 
+
     public Post(PostDTO post) {
         System.out.println("Mapping rating value from DTO: " + post.getRating()); // 값 확인
         this.id = post.getId();

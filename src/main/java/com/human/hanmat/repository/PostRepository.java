@@ -37,4 +37,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 1. 특정 사용자가 작성한 리뷰 조회
     @Query("SELECT p FROM Post p WHERE p.regBy = :regBy")
     List<Post> findByRegBy(@Param("regBy") String regBy);
+
+    //2. 특정 사용자의 리뷰 (최신순)
+    @Query("SELECT p FROM Post p WHERE p.regBy = :regBy ORDER BY p.id DESC")
+    List<Post> findByRegByOrderByPostIdDesc(@Param("regBy") String regBy);
+
+    //3. 특정 사용자의 리뷰(오래된순)
+    @Query("SELECT p FROM Post p WHERE p.regBy = :regBy ORDER BY p.id Asc")
+    List<Post> findByRegByOrderByRegDateAsc(@Param("regBy") String regBy);
+
+    //4. 특정 사용자의 리뷰 (별점높은순)
+    @Query("SELECT p FROM Post p WHERE p.regBy = :regBy ORDER BY p.rating DESC")
+    List<Post> findByRegByOrderByRatingDesc(@Param("regBy") String regBy);
+
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, T_POST.* FROM HANMAT.T_POST ORDER BY POST_RATING DESC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
+    List<Post> findAllOrderByRatingDesc(int start, int end);
+
 }

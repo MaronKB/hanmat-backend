@@ -27,8 +27,16 @@ public class PostController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public Response<?> findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "new") String sort) {
-        List<PostDTO> postPage = postService.getPage(page, size, sort);
+    public Response<?> findAll(@RequestParam(defaultValue = "1") int page,
+                               @RequestParam(defaultValue = "10") int size,
+                               @RequestParam(defaultValue = "new") String sort
+    ) {
+        // sort 값 검증: "new", "old", "rating"만 허용
+        if (!List.of("new", "old", "rating").contains(sort.toLowerCase())) {
+            return new Response<>(null, "Invalid sort parameter", false, "400");
+        }
+
+        List<PostDTO> postPage = postService.getPage(page, size, sort, null);
         int total = postService.getTotal();
 
         Page<PostDTO> pageData = parseListToPage(postPage, total, page, size);

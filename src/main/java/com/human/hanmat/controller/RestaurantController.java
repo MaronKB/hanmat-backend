@@ -74,5 +74,16 @@ public class RestaurantController {
         }
     }
 
+    @PostMapping("/add")
+    public Response<?> addRestaurant(@RequestBody RestaurantDTO restaurantDTO) {
+        System.out.println("Received data: " + restaurantDTO);
+        try {
+            restaurantService.addRestaurant(restaurantDTO);
+            return new Response<>(null, "Restaurant added successfully", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "Failed to add restaurant: " + e.getMessage(), false, null);
+        }
+    }
+
 
 }

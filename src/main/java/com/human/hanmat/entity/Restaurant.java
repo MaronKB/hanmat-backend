@@ -49,4 +49,7 @@ public class Restaurant {
 
     @Column(name = "restaurant_is_closed")
     private String isClosed;
+
+    @Column(name = "restaurant_description")
+    private String description;
 }

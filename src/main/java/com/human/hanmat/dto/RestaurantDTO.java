@@ -18,9 +18,10 @@ public class RestaurantDTO {
     private double longitude;
     private Date regDate;
     private boolean closed;
+    private String description;
 
     @Builder
-    public RestaurantDTO(int id, String name, String lmmAddr, String roadAddr, double latitude, double longitude, Date regDate, boolean closed) {
+    public RestaurantDTO(int id, String name, String lmmAddr, String roadAddr, double latitude, double longitude, Date regDate, boolean closed, String description) {
         this.id = id;
         this.name = name;
         this.lmmAddr = lmmAddr;
@@ -29,6 +30,7 @@ public class RestaurantDTO {
         this.longitude = longitude;
         this.regDate = regDate;
         this.closed = closed;
+        this.description = description;
     }
 
     public RestaurantDTO(Restaurant restaurant) {
@@ -40,5 +42,6 @@ public class RestaurantDTO {
         this.longitude = restaurant.getX();
         this.regDate = restaurant.getRegDate();
         this.closed = (restaurant.getIsClosed().equals("Y"));
+        this.description = restaurant.getDescription();
     }
 }

@@ -12,14 +12,14 @@ public class UserDTO {
     private String email;
     private String name;
     private String picture;
-    private int radius;
+    private Integer radius;
     private boolean isDeleted;
     private boolean isAdmin;
     private long[] interested;
     private String description;
 
     @Builder
-    public UserDTO(String email, String name, String picture, int radius, boolean isDeleted, boolean isAdmin, long[] interested, String description) {
+    public UserDTO(String email, String name, String picture, Integer radius, boolean isDeleted, boolean isAdmin, long[] interested, String description) {
         this.email = email;
         this.name = name;
         this.picture = picture;
@@ -37,11 +37,15 @@ public class UserDTO {
         this.radius = user.getRadius();
         this.isDeleted = user.getIsDeleted().equalsIgnoreCase("Y");
         this.isAdmin = user.getIsAdmin().equalsIgnoreCase("Y");
+        this.description = user.getDescription();
+        if (user.getInterested() == null) {
+            this.interested = new long[0];
+            return;
+        }
         String[] interested = user.getInterested().split(",");
         this.interested = new long[interested.length];
         for (int i = 0; i < interested.length; i++) {
             this.interested[i] = Long.parseLong(interested[i]);
         }
-        this.description = user.getDescription();
     }
 }

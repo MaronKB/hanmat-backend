@@ -56,7 +56,7 @@ public class User {
     private String autoTranslate;
 
     @Column(name = "user_radius")
-    private int radius;
+    private Integer radius;
 
     @Column(name = "user_interested")
     private String interested;
@@ -65,7 +65,7 @@ public class User {
     private String description;
 
     @Builder
-    public User(String email, String nickname, String profileImage, Date regDate, String regBy, Date modDate, String modBy, Date delDate, String delBy, String isDeleted, String isAdmin, String isBuddy, String autoTranslate, int radius, String interested, String description) {
+    public User(String email, String nickname, String profileImage, Date regDate, String regBy, Date modDate, String modBy, Date delDate, String delBy, String isDeleted, String isAdmin, String isBuddy, String autoTranslate, Integer radius, String interested, String description) {
         this.email = email;
         this.nickname = nickname;
         this.profileImage = profileImage;

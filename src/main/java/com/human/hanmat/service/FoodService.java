@@ -25,16 +25,6 @@ public class FoodService {
     @Autowired
     private FoodJPRepository foodJPRepository;
 
-    private FoodDTO convertFoodToFoodDTO(Food food) {
-        FoodDTO foodDTO = new FoodDTO();
-        foodDTO.setId(String.valueOf(food.getId()));
-        foodDTO.setName(food.getName());
-        foodDTO.setDscrn(food.getDscrn());
-        foodDTO.setCategory(food.getCategory());
-        foodDTO.setImage(food.getImage());
-        return foodDTO;
-    }
-
     public List<FoodDTO> getFoodList(String lang) {
         List<FoodDTO> foodList = new ArrayList<>();
         switch (lang) {
@@ -42,21 +32,21 @@ public class FoodService {
                 List<FoodKR> foodKRList = foodKRRepository.findAll();
                 for (FoodKR foodKR : foodKRList) {
                     System.out.println("foodKR: " + foodKR);
-                    foodList.add(convertFoodToFoodDTO(foodKR));
+                    foodList.add(new FoodDTO(foodKR));
                 }
             }
             case "en" -> {
                 List<FoodEN> foodENList = foodENRepository.findAll();
                 for (FoodEN foodEN : foodENList) {
                     System.out.println("foodEN: " + foodEN);
-                    foodList.add(convertFoodToFoodDTO(foodEN));
+                    foodList.add(new FoodDTO(foodEN));
                 }
             }
             case "jp" -> {
                 List<FoodJP> foodJPList = foodJPRepository.findAll();
                 for (FoodJP foodJP : foodJPList) {
                     System.out.println("foodJP: " + foodJP);
-                    foodList.add(convertFoodToFoodDTO(foodJP));
+                    foodList.add(new FoodDTO(foodJP));
                 }
             }
         }

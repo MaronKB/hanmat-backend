@@ -13,4 +13,7 @@ public class Food {
     private String dscrn;
     private String category;
     private String image;
+    private String description;
+    private Integer spicy;
+    private Integer hanmat;
 }

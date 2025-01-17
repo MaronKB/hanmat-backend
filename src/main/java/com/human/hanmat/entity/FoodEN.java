@@ -31,4 +31,14 @@ public class FoodEN extends Food {
 
     @Column(name = "food_image")
     private String image;
+
+    @Column(name = "food_description")
+    private String description;
+
+    @Column(name = "food_spicy")
+    private Integer spicy;
+
+    @Column(name = "food_hanmat")
+    private Integer hanmat;
+
 }

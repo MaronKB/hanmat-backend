@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@Deprecated
 public class FoodApiService {
     private final CommonApiService CommonApiService = new CommonApiService();
     private static final String TOKEN = "nTSaKfYMjxWt6GPwWlIOyh3Kyn6BDPCU52gFe2W7f7Ea4j9iCw4CHWIJFBlCEYoG";
@@ -102,7 +103,7 @@ public class FoodApiService {
 
                     // DTO에 저장
                     FoodDTO foodDTO = new FoodDTO();
-                    foodDTO.setId(String.valueOf(menuId));
+                    foodDTO.setId(menuId);
                     foodDTO.setName(menuNm);
                     foodDTO.setDscrn(menuDscrn);
                     foodDTO.setCategory(menuCtgrySclasNm);

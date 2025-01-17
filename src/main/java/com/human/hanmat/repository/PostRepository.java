@@ -53,4 +53,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT * FROM (SELECT ROWNUM RN, T_POST.* FROM HANMAT.T_POST ORDER BY POST_RATING DESC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
     List<Post> findAllOrderByRatingDesc(int start, int end);
 
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, P.*, B.BEST_IS_VISIBLE, B.BEST_REG_DATE FROM HANMAT.T_POST P INNER JOIN T_BEST B ON P.POST_ID = B.BEST_POST_ID ORDER BY POST_ID DESC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
+    List<Post> findAllBestOrderByDesc(int start, int end);
+
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, P.*, B.BEST_IS_VISIBLE, B.BEST_REG_DATE FROM HANMAT.T_POST P INNER JOIN T_BEST B ON P.POST_ID = B.BEST_POST_ID ORDER BY POST_ID ASC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
+    List<Post> findAllBestOrderByAsc(int start, int end);
+
+    @Query(value = "SELECT * FROM (SELECT ROWNUM RN, P.*, B.BEST_IS_VISIBLE, B.BEST_REG_DATE FROM HANMAT.T_POST P INNER JOIN T_BEST B ON P.POST_ID = B.BEST_POST_ID WHERE B.BEST_IS_VISIBLE = 'Y' ORDER BY POST_ID DESC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
+    List<Post> findAllVisibleBestOrderByDesc(int start, int end);
 }

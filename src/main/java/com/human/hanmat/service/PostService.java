@@ -1,42 +1,22 @@
 package com.human.hanmat.service;
 
 import com.human.hanmat.dto.PostDTO;
+import com.human.hanmat.entity.Best;
 import com.human.hanmat.entity.Post;
+import com.human.hanmat.repository.BestRepository;
 import com.human.hanmat.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
-    private String getSortParameter(String sort) {
-        switch (sort) {
-            case "id":
-                return "post_id";
-            case "title":
-                return "post_title";
-            case "author":
-                return "post_author";
-            case "rating":
-                return "post_rating";
-            case "restaurantId":
-                return "post_restaurant_id";
-            case "regDate":
-                return "post_reg_date";
-            case "regBy":
-                return "post_reg_by";
-            case "modDate":
-                return "post_mod_date";
-            case "modBy":
-                return "post_mod_by";
-            default:
-                return "post_id";
-        }
-    }
+    private final BestRepository bestRepository;
 
     public List<Post> findAll() {
         return postRepository.findAll();
@@ -119,12 +99,64 @@ public class PostService {
         return postDTOList;
     }
 
+    public List<PostDTO> getBestPosts(int page, int size) {
+        List<Post> bestPosts = postRepository.findAllBestOrderByDesc((page - 1) * size + 1, page * size);
+        List<PostDTO> bestPostDTOs = new ArrayList<>();
+        for (Post post: bestPosts) {
+            bestPostDTOs.add(new PostDTO(post));
+        }
+        System.out.println(bestPostDTOs);
+        return bestPostDTOs;
+    }
+
+    public List<PostDTO> getBestPostsByVisible(int page, int size) {
+        List<Post> bestPosts = postRepository.findAllVisibleBestOrderByDesc((page - 1) * size + 1, page * size);
+        List<PostDTO> bestPostDTOs = new ArrayList<>();
+        for (Post post: bestPosts) {
+            bestPostDTOs.add(new PostDTO(post));
+        }
+        return bestPostDTOs;
+    }
+
+    public PostDTO newBestPost(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        if (post == null) {
+            return null;
+        }
+        Best best = new Best(post);
+        bestRepository.save(best);
+
+        return new PostDTO(post);
+    }
+
+    public Best setBestPost(Long postId) {
+        Best best = bestRepository.findById(postId).orElse(null);
+        if (best == null) {
+            return null;
+        }
+        best.setIsVisible(best.getIsVisible().equalsIgnoreCase("Y") ? "N" : "Y");
+        bestRepository.save(best);
+        return best;
+    }
+
+    public void deleteBestPost(Long postId) {
+        bestRepository.deleteById(postId);
+    }
+
     public int getTotal() {
         return (int) postRepository.count();
     }
 
     public int getTotalByEmail(String email) {
         return postRepository.countAllByEmail(email);
+    }
+
+    public int getTotalBestPosts() {
+        return (int) bestRepository.count();
+    }
+
+    public int getTotalBestPostsByVisible() {
+        return bestRepository.countAllVisible();
     }
 
     public int getTotalByRestaurantId(Long restaurantId) {

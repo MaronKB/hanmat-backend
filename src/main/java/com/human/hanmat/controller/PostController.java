@@ -2,6 +2,7 @@ package com.human.hanmat.controller;
 
 import com.human.hanmat.dto.Page;
 import com.human.hanmat.dto.PostDTO;
+import com.human.hanmat.entity.Best;
 import com.human.hanmat.entity.Response;
 import com.human.hanmat.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,37 @@ public class PostController {
     public Response<PostDTO> saveReview(@RequestBody PostDTO post) {
         PostDTO savedPost = postService.saveReview(post);
         return new Response<>(savedPost, "Review saved successfully", true, null);
+    }
+
+    @GetMapping("/best")
+    public Response<?> getAllBestPosts(@RequestParam(defaultValue = "true") boolean all, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+        List<PostDTO> postPage = all
+                ? postService.getBestPosts(page, size)
+                : postService.getBestPostsByVisible(page, size);
+        int total = all
+                ? postService.getTotalBestPosts()
+                : postService.getTotalBestPostsByVisible();
+
+        Page<PostDTO> pageData = parseListToPage(postPage, total, page, size);
+
+        return new Response<>(pageData, "Success", true, null);
+    }
+
+    @GetMapping("/best/{postId}")
+    public Response<?> newBestPost(@PathVariable Long postId) {
+        PostDTO post = postService.newBestPost(postId);
+        return new Response<>(post, "Success", true, null);
+    }
+
+    @PatchMapping("/best/{postId}")
+    public Response<?> setBestPost(@PathVariable Long postId) {
+        Best best = postService.setBestPost(postId);
+        return new Response<>(best, "Success", true, null);
+    }
+
+    @DeleteMapping("/best/{postId}")
+    public Response<?> deleteBestPost(@PathVariable Long postId) {
+        postService.deleteBestPost(postId);
+        return new Response<>(null, "Success", true, null);
     }
 }

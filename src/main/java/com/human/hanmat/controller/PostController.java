@@ -108,4 +108,16 @@ public class PostController {
         postService.deleteBestPost(postId);
         return new Response<>(null, "Success", true, null);
     }
+
+//    관리자 리뷰 수정
+    @PutMapping("/update")
+    public Response<?> updatePost(@RequestBody PostDTO postDTO) {
+        try {
+            postService.updatePost(postDTO);
+            return new Response<>(null, "Post updated successfully", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "Failed to update post: " + e.getMessage(), false, null);
+        }
+    }
+
 }

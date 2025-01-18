@@ -5,6 +5,7 @@ import com.human.hanmat.entity.Best;
 import com.human.hanmat.entity.Post;
 import com.human.hanmat.repository.BestRepository;
 import com.human.hanmat.repository.PostRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -162,4 +163,21 @@ public class PostService {
     public int getTotalByRestaurantId(Long restaurantId) {
         return postRepository.countAllByRestaurantId(restaurantId);
     }
+
+//    관리자 리뷰 수정
+    @Transactional
+    public void updatePost(PostDTO postDTO) {
+        Post post = postRepository.findById((long) postDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postDTO.getId()));
+
+
+        post.setTitle(postDTO.getTitle());
+        post.setContent(postDTO.getContent());
+        post.setRegDate(new java.sql.Date(postDTO.getRegDate().getTime()));
+        post.setIsHidden(postDTO.isHidden() ? "Y" : "N");
+        post.setIsReported(postDTO.isReported() ? "Y" : "N");
+
+        postRepository.save(post);
+    }
+
 }

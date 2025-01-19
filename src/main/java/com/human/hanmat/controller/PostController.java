@@ -120,4 +120,16 @@ public class PostController {
         }
     }
 
+//    관리자 리뷰 삭제
+    @DeleteMapping("/delete")
+    public Response<?> deleteReviews(@RequestBody List<Long> ids) {
+        try {
+            postService.deleteReviews(ids);
+            return new Response<>(null, "리뷰 삭제 성공", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "리뷰 삭제 실패: " + e.getMessage(), false, null);
+        }
+    }
+
+
 }

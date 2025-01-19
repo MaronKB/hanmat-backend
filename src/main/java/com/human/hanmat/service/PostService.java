@@ -180,4 +180,11 @@ public class PostService {
         postRepository.save(post);
     }
 
+//    관리자 리뷰 삭제
+    @Transactional
+    public void deleteReviews(List<Long> ids) {
+        postRepository.deleteAllById(ids);
+    }
+
+
 }

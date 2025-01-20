@@ -186,5 +186,16 @@ public class PostService {
         postRepository.deleteAllById(ids);
     }
 
+//    관리자 리뷰 추가
+    @Transactional
+    public PostDTO addReview(PostDTO postDTO) {
+        Post post = new Post(postDTO);
+        post.setRegDate(new java.sql.Date(System.currentTimeMillis()));
+        post.setRegBy(postDTO.getAuthor() != null ? postDTO.getAuthor() : "system@hanmat.com");
+
+        postRepository.save(post);
+        return new PostDTO(post);
+    }
+
 
 }

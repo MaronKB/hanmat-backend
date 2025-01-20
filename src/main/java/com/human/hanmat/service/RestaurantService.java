@@ -93,7 +93,7 @@ public class RestaurantService {
     }
 
 
-//    검색
+//  관리자 검색
     @Transactional(readOnly = true)
     public List<RestaurantDTO> searchByCategory(String category, String keyword, int page, int size) {
         int startRow = (page - 1) * size + 1;

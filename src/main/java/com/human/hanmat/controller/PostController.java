@@ -131,5 +131,16 @@ public class PostController {
         }
     }
 
+//    관리자 리뷰 추가
+    @PostMapping("/add")
+    public Response<?> addReview(@RequestBody PostDTO postDTO) {
+        try {
+            PostDTO savedPost = postService.addReview(postDTO);
+            return new Response<>(savedPost, "리뷰가 성공적으로 추가되었습니다.", true, null);
+        } catch (Exception e) {
+            return new Response<>(null, "리뷰 추가 실패: " + e.getMessage(), false, "500");
+        }
+    }
+
 
 }

@@ -50,3 +50,4 @@ public class Comment {
     @Column(name = "comment_is_deleted")
     private String isDeleted;
 }
+

@@ -36,6 +36,11 @@ public class RestaurantController {
         return new Response<>(restaurantService.search(location), "Success", true, null);
     }
 
+    @GetMapping("/name/{name}")
+    public Response<?> findByName(@PathVariable String name) {
+        return new Response<>(restaurantService.findByName(name), "Success", true, null);
+    }
+
 //    검색
     @GetMapping("/search")
     public Response<?> searchRestaurants(@RequestParam String category,

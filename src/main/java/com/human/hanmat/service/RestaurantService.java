@@ -54,6 +54,15 @@ public class RestaurantService {
         return restaurantDTOList;
     }
 
+    public List<RestaurantDTO> findByName(String name) {
+        List<Restaurant> restaurants = restaurantRepository.findByName(name);
+        List<RestaurantDTO> restaurantDTOList = new ArrayList<>();
+        for (Restaurant restaurant: restaurants) {
+            restaurantDTOList.add(new RestaurantDTO(restaurant));
+        }
+        return restaurantDTOList;
+    }
+
     public List<RestaurantDTO> search(LocationDTO location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();

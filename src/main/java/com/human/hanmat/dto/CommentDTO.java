@@ -33,3 +33,5 @@ public class CommentDTO {
         this.isDeleted = comment.getIsDeleted().equals("Y");
     }
 }
+
+

@@ -30,3 +30,4 @@ public class CommentService {
         return (int) commentRepository.count();
     }
 }
+

@@ -13,3 +13,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByOrderByAsc(int start, int end, String sort);
 }
 
+

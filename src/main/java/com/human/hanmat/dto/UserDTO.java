@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.query.sql.internal.ParameterRecognizerImpl;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class UserDTO {
@@ -17,9 +19,10 @@ public class UserDTO {
     private boolean isAdmin;
     private long[] interested;
     private String description;
+    private Date regDate;
 
     @Builder
-    public UserDTO(String email, String name, String picture, Integer radius, boolean isDeleted, boolean isAdmin, long[] interested, String description) {
+    public UserDTO(String email, String name, String picture, Integer radius, boolean isDeleted, boolean isAdmin, long[] interested, String description, Date regDate) {
         this.email = email;
         this.name = name;
         this.picture = picture;
@@ -28,6 +31,7 @@ public class UserDTO {
         this.isAdmin = isAdmin;
         this.interested = interested;
         this.description = description;
+        this.regDate = regDate;
     }
 
     public UserDTO(User user) {
@@ -38,6 +42,7 @@ public class UserDTO {
         this.isDeleted = user.getIsDeleted().equalsIgnoreCase("Y");
         this.isAdmin = user.getIsAdmin().equalsIgnoreCase("Y");
         this.description = user.getDescription();
+        this.regDate = user.getRegDate();
         if (user.getInterested() == null) {
             this.interested = new long[0];
             return;

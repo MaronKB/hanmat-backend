@@ -107,3 +107,4 @@ public class Post {
         this.isDeleted = post.isDeleted() ? "Y" : "N";
     }
 }
+

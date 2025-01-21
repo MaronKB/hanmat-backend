@@ -47,3 +47,4 @@ public class PostDTO {
         this.isDeleted = post.getIsDeleted().equals("Y");
     }
 }
+

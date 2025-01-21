@@ -4,6 +4,7 @@ import com.human.hanmat.dto.Page;
 import com.human.hanmat.dto.RestaurantDTO;
 import com.human.hanmat.dto.UserDTO;
 import com.human.hanmat.entity.Response;
+import com.human.hanmat.entity.User;
 import com.human.hanmat.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,4 +44,20 @@ public class UserController {
     public Response<?> login(@RequestBody UserDTO userData) {
         return new Response<>(userService.login(userData), "Success", true, null);
     }
+
+//    관리자 유저 수정
+    @PutMapping("/update")
+    public Response<?> updateUser(@RequestBody UserDTO userDTO) {
+        try {
+            userService.updateUser(userDTO);
+            return new Response<>(null, "User updated successfully", true, null);
+        } catch (IllegalArgumentException e) {
+            return new Response<>(null, e.getMessage(), false, null);
+        } catch (Exception e) {
+            return new Response<>(null, "Failed to update user: " + e.getMessage(), false, null);
+        }
+    }
+
+
+
 }

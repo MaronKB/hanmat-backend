@@ -3,6 +3,7 @@ package com.human.hanmat.service;
 import com.human.hanmat.dto.UserDTO;
 import com.human.hanmat.entity.User;
 import com.human.hanmat.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -62,4 +63,24 @@ public class UserService {
         User user = userRepository.findByEmail(email);
         return new UserDTO(user);
     }
+
+//    관리자 유저 수정
+    @Transactional
+    public void updateUser(UserDTO userDTO) {
+        User user = userRepository.findByEmail(userDTO.getEmail());
+
+        if (user == null) {
+            throw new IllegalArgumentException("User not found with email: " + userDTO.getEmail());
+        }
+
+        user.setNickname(userDTO.getName());
+        user.setProfileImage(userDTO.getPicture());
+        user.setDescription(userDTO.getDescription());
+        user.setIsDeleted(userDTO.isDeleted() ? "Y" : "N");
+
+        userRepository.save(user);
+    }
+
+
+
 }

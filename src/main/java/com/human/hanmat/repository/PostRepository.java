@@ -61,4 +61,55 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT * FROM (SELECT ROWNUM RN, P.*, B.BEST_IS_VISIBLE, B.BEST_REG_DATE FROM HANMAT.T_POST P INNER JOIN T_BEST B ON P.POST_ID = B.BEST_POST_ID WHERE B.BEST_IS_VISIBLE = 'Y' ORDER BY POST_ID DESC) WHERE RN >= ?1 AND RN <= ?2", nativeQuery = true)
     List<Post> findAllVisibleBestOrderByDesc(int start, int end);
+
+//    관리자 리뷰 검색
+    @Query(value = """
+        SELECT * FROM (
+            SELECT ROWNUM RN, T_POST.* 
+            FROM HANMAT.T_POST 
+            WHERE 
+                (POST_RESTAURANT_ID LIKE '%' || :keyword || '%' AND :category = 'restaurantId') OR
+                (LOWER(POST_AUTHOR) LIKE LOWER('%' || :keyword || '%') AND :category = 'author') OR
+                (POST_RATING = TO_NUMBER(:keyword) AND :category = 'rating') OR
+                (LOWER(POST_TITLE) LIKE LOWER('%' || :keyword || '%') AND :category = 'title') OR
+                (LOWER(POST_CONTENT) LIKE LOWER('%' || :keyword || '%') AND :category = 'content') OR
+                (TO_CHAR(POST_REG_DATE, 'YYYY-MM-DD') LIKE '%' || :keyword || '%' AND :category = 'regDate') OR
+                (POST_IS_HIDDEN = :keyword AND :category = 'isHidden') OR
+                (POST_IS_REPORTED = :keyword AND :category = 'isReported')
+            ORDER BY 
+                CASE 
+                    WHEN :sort = 'new' THEN POST_ID 
+                    WHEN :sort = 'old' THEN POST_ID 
+                    WHEN :sort = 'rating' THEN POST_RATING 
+                END DESC
+        ) 
+        WHERE RN BETWEEN :start AND :end
+        """, nativeQuery = true)
+    List<Post> searchPosts(
+            @Param("category") String category,
+            @Param("keyword") String keyword,
+            @Param("sort") String sort,
+            @Param("start") int start,
+            @Param("end") int end
+    );
+
+    @Query(value = """
+    SELECT COUNT(*) FROM HANMAT.T_POST 
+    WHERE 
+        (POST_RESTAURANT_ID LIKE '%' || :keyword || '%' AND :category = 'restaurantId') OR
+        (LOWER(POST_AUTHOR) LIKE LOWER('%' || :keyword || '%') AND :category = 'author') OR
+        (POST_RATING = TO_NUMBER(:keyword) AND :category = 'rating') OR
+        (LOWER(POST_TITLE) LIKE LOWER('%' || :keyword || '%') AND :category = 'title') OR
+        (LOWER(POST_CONTENT) LIKE LOWER('%' || :keyword || '%') AND :category = 'content') OR
+        (TO_CHAR(POST_REG_DATE, 'YYYY-MM-DD') LIKE '%' || :keyword || '%' AND :category = 'regDate') OR
+        (POST_IS_HIDDEN = :keyword AND :category = 'isHidden') OR
+        (POST_IS_REPORTED = :keyword AND :category = 'isReported')
+    """, nativeQuery = true)
+    int countSearchResults(
+            @Param("category") String category,
+            @Param("keyword") String keyword
+    );
+
+
+
 }

@@ -112,15 +112,20 @@ public class PostController {
 //    관리자 리뷰 수정
     @PutMapping("/update")
     public Response<?> updatePost(@RequestBody PostDTO postDTO) {
+        System.out.println("Updating post with data: " + postDTO);
+
         try {
             postService.updatePost(postDTO);
             return new Response<>(null, "Post updated successfully", true, null);
         } catch (Exception e) {
+            System.err.println("Error updating post: " + e.getMessage());
             return new Response<>(null, "Failed to update post: " + e.getMessage(), false, null);
         }
     }
 
-//    관리자 리뷰 삭제
+
+
+    //    관리자 리뷰 삭제
     @DeleteMapping("/delete")
     public Response<?> deleteReviews(@RequestBody List<Long> ids) {
         try {
@@ -142,5 +147,22 @@ public class PostController {
         }
     }
 
+//    관리자 리뷰 검색
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<?> searchPosts(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "new") String sort,
+            @RequestParam String category,
+            @RequestParam String keyword
+    ) {
+        List<PostDTO> postPage = postService.searchPosts(page, size, sort, category, keyword);
+        int total = postService.countSearchResults(category, keyword);
+
+        Page<PostDTO> pageData = parseListToPage(postPage, total, page, size);
+
+        return new Response<>(pageData, "Success", true, null);
+    }
 
 }

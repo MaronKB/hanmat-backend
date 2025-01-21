@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -165,22 +166,22 @@ public class PostService {
     }
 
 //    관리자 리뷰 수정
-    @Transactional
     public void updatePost(PostDTO postDTO) {
-        Post post = postRepository.findById((long) postDTO.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postDTO.getId()));
-
-
-        post.setTitle(postDTO.getTitle());
-        post.setContent(postDTO.getContent());
-        post.setRegDate(new java.sql.Date(postDTO.getRegDate().getTime()));
-        post.setIsHidden(postDTO.isHidden() ? "Y" : "N");
-        post.setIsReported(postDTO.isReported() ? "Y" : "N");
-
-        postRepository.save(post);
+        Optional<Post> postOptional = postRepository.findById((long) postDTO.getId());
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            post.setTitle(postDTO.getTitle());
+            post.setContent(postDTO.getContent());
+            post.setRating(postDTO.getRating());
+            post.setIsHidden(postDTO.isHidden() ? "Y" : "N");
+            post.setIsReported(postDTO.isReported() ? "Y" : "N");
+            postRepository.save(post);
+        } else {
+            throw new RuntimeException("Post not found with ID: " + postDTO.getId());
+        }
     }
 
-//    관리자 리뷰 삭제
+    //    관리자 리뷰 삭제
     @Transactional
     public void deleteReviews(List<Long> ids) {
         postRepository.deleteAllById(ids);
@@ -196,6 +197,26 @@ public class PostService {
         postRepository.save(post);
         return new PostDTO(post);
     }
+
+//    관리자 리뷰 검색
+    public List<PostDTO> searchPosts(int page, int size, String sort, String category, String keyword) {
+        int start = (page - 1) * size + 1;
+        int end = page * size;
+
+        List<Post> postPage = postRepository.searchPosts(category, keyword, sort, start, end);
+        List<PostDTO> postDTOList = new ArrayList<>();
+
+        for (Post post : postPage) {
+            postDTOList.add(new PostDTO(post));
+        }
+
+        return postDTOList;
+    }
+
+    public int countSearchResults(String category, String keyword) {
+        return postRepository.countSearchResults(category, keyword);
+    }
+
 
 
 }

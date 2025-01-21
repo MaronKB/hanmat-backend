@@ -1,9 +1,6 @@
 package com.human.hanmat.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +13,12 @@ import java.sql.Date;
 @AllArgsConstructor
 @Table(name = "T_COMMENT", schema = "HANMAT")
 public class Comment {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "comment_id_seq")
+    @SequenceGenerator(name = "comment_id_seq", sequenceName = "HANMAT_SEQ_COMMENT_ID", allocationSize = 1)
     @Column(name = "comment_id")
-    private Long id;
+    private Long id; // 댓글의 Primary Key
 
     @Column(name = "comment_author")
     private String author;

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +42,11 @@ public class RestaurantService {
 
     public List<Restaurant> findAll() {
         return restaurantRepository.findAll();
+    }
+
+    public RestaurantDTO findById(Long id) {
+        Optional<Restaurant> restaurants = restaurantRepository.findById(id);
+        return restaurants.map(RestaurantDTO::new).orElse(null);
     }
 
     @Transactional(readOnly = true)

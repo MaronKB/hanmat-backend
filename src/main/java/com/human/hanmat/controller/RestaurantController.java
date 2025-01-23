@@ -31,6 +31,11 @@ public class RestaurantController {
         return new Response<>(pageData, "Success", true, null);
     }
 
+    @GetMapping("/get/{id}")
+    public Response<?> findById(@PathVariable Long id) {
+        return new Response<>(restaurantService.findById(id), "Success", true, null);
+    }
+
     @PostMapping("/nearby")
     public Response<?> getNearbyRestaurants(@RequestBody LocationDTO location) {
         return new Response<>(restaurantService.search(location), "Success", true, null);

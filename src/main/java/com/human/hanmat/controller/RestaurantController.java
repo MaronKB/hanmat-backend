@@ -18,7 +18,7 @@ public class RestaurantController {
 
     @GetMapping("/all")
     @ResponseBody
-    public Response<?> findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size, @RequestParam(defaultValue = "name") String sort) {
+    public Response<?> findAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "name") String sort) {
         List<RestaurantDTO> restaurantPage = restaurantService.getPage(page, size, sort);
         int total = restaurantService.getTotal();
 
